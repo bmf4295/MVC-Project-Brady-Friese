@@ -10,14 +10,13 @@
   <nav><a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
     <div class="navlink"><a href="/logout">Log out</a></div>
   </nav>
-  <input type="hidden" name="_csrf" value={{csrfToken}}/>
   <section id="makeDomo">
     <form id="domoForm" name="domoForm" action="/maker" method="POST" class="domoForm">
       <label for="name">Name: </label>
       <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
       <label for="age">Age: </label>
       <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
-
+      <input type="hidden" name="_csrf" value={{csrfToken}} />
       <input class="makeDomoSubmit" type="submit" value="Make Domo" />
     </form>
   </section>

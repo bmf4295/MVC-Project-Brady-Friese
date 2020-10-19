@@ -11,7 +11,6 @@
     <div class="navlink"><a href="/login">Login</a></div>
     <div class="navlink"><a href="/signup">Sign up</a></div>
   </nav>
-  <input type="hidden" name="_csrf" value={{csrfToken}}/>
   <section id="signup">
     <form id="signupForm" name="signupForm" action="/signup" method="POST" class="mainForm">
       <label for="username">Username: </label>
@@ -20,7 +19,7 @@
       <input id="pass" type="password" name="pass" placeholder="password"/>
       <label for="pass2">Password: </label>
       <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
-
+      <input type="hidden" name="_csrf" value={{csrfToken}} />
       <input class="formSubmit" type="submit" value="Sign Up" />
     </form>
   </section>
