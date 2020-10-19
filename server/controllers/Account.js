@@ -3,11 +3,11 @@ const models = require('../models');
 const { Account } = models;
 
 const loginPage = (req, res) => {
-  res.render('login');
+  res.render('login', { csrfToken: req.csrfToken() });
 };
 
 const signupPage = (req, res) => {
-  res.render('signup');
+  res.render('signup', { csrfToken: req.csrfToken() });
 };
 const logout = (req, res) => {
   req.session.destroy();
@@ -49,9 +49,9 @@ const signup = (req, res) => {
 
     const savePromise = newAccount.save();
 
-    savePromise.then(() =>{
-     req.session.account = Account.AccountModel.toAPI(newAccount);
-     res.json({ redirect: '/maker' })
+    savePromise.then(() => {
+      req.session.account = Account.AccountModel.toAPI(newAccount);
+      res.json({ redirect: '/maker' });
     });
 
     savePromise.catch((err) => {

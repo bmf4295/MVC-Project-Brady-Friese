@@ -11,6 +11,7 @@
     <div class="navlink"><a href="/login">Login</a></div>
     <div class="navlink"><a href="/signup">Sign up</a></div>
   </nav>
+  <input type="hidden" name="_csrf" value={{csrfToken}}/>
   <section id="login">
     <form id="loginForm" name="loginForm" action="/login" method="POST" class="mainForm">
       <label for="username">Username: </label>
