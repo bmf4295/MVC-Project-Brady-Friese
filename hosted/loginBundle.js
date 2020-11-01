@@ -36,6 +36,26 @@ var handleSignup = function handleSignup(e) {
   return false;
 };
 
+var handleReset = function handleReset(e) {
+  e.preventDefault();
+  $('#domoMessage').animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
+    handleError("RAWR! All fields are required");
+    return false;
+  }
+
+  if ($("#pass").val() !== $("#pass2").val()) {
+    handleError("RAWR! Passwords do not match");
+    return false;
+  }
+
+  sendAjax("POST", $("#resetForm").attr("action"), $("#resetForm").serialize(), redirect);
+  return false;
+};
+
 var LoginWindow = function LoginWindow(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "loginForm",
@@ -109,6 +129,46 @@ var SignupWindow = function SignupWindow(props) {
   }));
 };
 
+var PasswordReset = function PasswordReset(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "resetForm",
+    name: "resetForm",
+    onSubmit: handleReset,
+    action: "/resetPassword",
+    method: "POST",
+    className: "mainForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "user",
+    type: "text",
+    name: "username",
+    placeholder: "username"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "New Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass",
+    type: "password",
+    name: "pass",
+    placeholder: "password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "New Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass2",
+    type: "password",
+    name: "pass2",
+    placeholder: "retype password"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "formSubmit",
+    type: "submit",
+    value: "Reset"
+  }));
+};
+
 var createLoginWindow = function createLoginWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(LoginWindow, {
     csrf: csrf
@@ -121,9 +181,16 @@ var createSignupWindow = function createSignupWindow(csrf) {
   }), document.querySelector('#content'));
 };
 
+var createPasswordResetWindow = function createPasswordResetWindow(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(PasswordReset, {
+    csrf: csrf
+  }), document.querySelector('#content'));
+};
+
 var setup = function setup(csrf) {
   var loginButton = document.querySelector("#loginButton");
   var signupButton = document.querySelector("#signupButton");
+  var resetButton = document.querySelector("#resetPasswordButton");
   signupButton.addEventListener("click", function (e) {
     e.preventDefault();
     createSignupWindow(csrf);
@@ -132,6 +199,11 @@ var setup = function setup(csrf) {
   loginButton.addEventListener("click", function (e) {
     e.preventDefault();
     createLoginWindow(csrf);
+    return false;
+  });
+  resetButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createPasswordResetWindow(csrf);
     return false;
   });
   createLoginWindow(csrf);

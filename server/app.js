@@ -61,7 +61,7 @@ app.use(session({
   secret: 'Domo Arigato',
   resave: true,
   saveUninitialized: true,
-  cookie:{
+  cookie: {
     httpOnly: true,
   },
 }));
@@ -71,10 +71,10 @@ app.engine('handlebars', expressHandlebars({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 app.use(csrf());
-app.use((err,req,res,next)=>{
-  console.log(err.code)
-  if(err.code !== 'EBADCSRFTOKEN') return next(err);
-  
+app.use((err, req, res, next) => {
+  console.log(err.code);
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+
   console.log('Missing CSRF token');
   return false;
 });

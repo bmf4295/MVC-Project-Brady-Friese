@@ -6,6 +6,7 @@ const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+
 const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
@@ -63,16 +64,62 @@ const signup = (req, res) => {
   });
 };
 
-const getToken = (request,response)=>{
+const changePassword = (req, res) => {
+  req.body.username = `${req.body.username}`;
+  req.body.pass = `${req.body.pass}`;
+  req.body.pass2 = `${req.body.pass2}`;
+
+  if (!req.body.username || !req.body.pass || !req.body.pass2) {
+    return res.status(400).json({ error: 'RAWR! All fields are required' });
+  }
+  if (req.body.pass !== req.body.pass2) {
+    return res.status(400).json({ error: 'RAWR! Passwords do not match' });
+  }
+  return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+    const newAccountData = {
+      salt,
+      password: hash,
+    };
+    const search = {
+      username: req.body.username,
+    };
+   
+  
+   Account.AccountModel.findOne(search, (err,foundAccount)=>{
+     if(err){
+      return res.status(400).json({ error: 'An error occured' });
+     }else{
+      if(!foundAccount){
+        return res.status(404).json({ error: 'Account not found' });
+      }else{
+        foundAccount.salt = newAccountData.salt;
+        foundAccount.password = newAccountData.password;
+        const savePromise = foundAccount.save();
+        savePromise.then(() => {
+          req.session.account = Account.AccountModel.toAPI(foundAccount);
+          res.json({ redirect: '/maker' });
+        });
+        savePromise.catch((err) => {
+          console.log(err);     
+          return res.status(400).json({ error: 'An error occurred' });
+        });
+      }
+     }
+   });
+  });
+  
+}
+
+const getToken = (request, response) => {
   const req = request;
   const res = response;
-  const csrfJSON={
+  const csrfJSON = {
     csrfToken: req.csrfToken(),
   };
   res.json(csrfJSON);
-}
+};
 
-
+module.exports.resetPassword = changePassword
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;

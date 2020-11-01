@@ -40,6 +40,7 @@ const DomoList = function(props){
     if(props.domos.length===0){
         return(
             <div className="domoList">
+            
                 <h3 className="emptyDomo">No Domos yet</h3>
             </div>
         );
@@ -51,7 +52,7 @@ const domoNodes = props.domos.map(function(domo){
             <h3 className="domoName">Name: {domo.name} </h3>
             <h3 className="domoLevel">Level: {domo.level}</h3>
             <h3 className="domoAge">Age: {domo.age}</h3>
-            
+
         </div>
     );
 });

@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const models = require('../models');
+const { DomoModel } = require('../models/Domo');
 
 const { Domo } = models;
 
@@ -19,7 +21,7 @@ const makeDomo = (req, res) => {
   const domoData = {
     name: req.body.name,
     age: req.body.age,
-    level:req.body.level,
+    level: req.body.level,
     owner: req.session.account._id,
   };
   const newDomo = new Domo.DomoModel(domoData);
@@ -38,19 +40,20 @@ const makeDomo = (req, res) => {
   return domoPromise;
 };
 
-const getDomos = (request, response)=>{
+const getDomos = (request, response) => {
   const req = request;
   const res = response;
 
-  return Domo.DomoModel.findByOwner(req.session.account._id,(err,docs)=>{
-    if(err){
+  return Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
       console.log(err);
-      return res.status(400).json({error:"An error occured"});
+      return res.status(400).json({ error: 'An error occured' });
     }
 
-    return res.json({domos:docs});
+    return res.json({ domos: docs });
   });
 };
+
 
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
