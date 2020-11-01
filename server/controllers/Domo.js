@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
+
 const models = require('../models');
-const { DomoModel } = require('../models/Domo');
 
 const { Domo } = models;
 

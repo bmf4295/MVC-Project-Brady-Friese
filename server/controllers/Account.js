@@ -83,32 +83,31 @@ const changePassword = (req, res) => {
     const search = {
       username: req.body.username,
     };
-   
-  
-   Account.AccountModel.findOne(search, (err,foundAccount)=>{
-     if(err){
-      return res.status(400).json({ error: 'An error occured' });
-     }else{
-      if(!foundAccount){
-        return res.status(404).json({ error: 'Account not found' });
-      }else{
-        foundAccount.salt = newAccountData.salt;
-        foundAccount.password = newAccountData.password;
-        const savePromise = foundAccount.save();
-        savePromise.then(() => {
-          req.session.account = Account.AccountModel.toAPI(foundAccount);
-          res.json({ redirect: '/maker' });
-        });
-        savePromise.catch((err) => {
-          console.log(err);     
-          return res.status(400).json({ error: 'An error occurred' });
-        });
+
+
+    Account.AccountModel.findOne(search, (err, foundAccount) => {
+      const account = foundAccount;
+      if (err) {
+        return res.status(400).json({ error: 'An error occured' });
       }
-     }
-   });
+      if (!account) {
+        return res.status(404).json({ error: 'Account not found' });
+      }
+      account.salt = newAccountData.salt;
+      account.password = newAccountData.password;
+      const savePromise = account.save();
+      savePromise.then(() => {
+        req.session.account = Account.AccountModel.toAPI(account);
+        res.json({ redirect: '/maker' });
+      });
+      savePromise.catch((err2) => {
+        console.log(err2);
+        return res.status(400).json({ error: 'An error occurred' });
+      });
+      return false;
+    });
   });
-  
-}
+};
 
 const getToken = (request, response) => {
   const req = request;
@@ -119,7 +118,7 @@ const getToken = (request, response) => {
   res.json(csrfJSON);
 };
 
-module.exports.resetPassword = changePassword
+module.exports.resetPassword = changePassword;
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
