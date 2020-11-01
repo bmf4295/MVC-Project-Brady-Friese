@@ -10,7 +10,6 @@ const makerPage = (req, res) => {
     }
     return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
   });
-  // res.render('app');
 };
 
 const makeDomo = (req, res) => {
@@ -20,6 +19,7 @@ const makeDomo = (req, res) => {
   const domoData = {
     name: req.body.name,
     age: req.body.age,
+    level:req.body.level,
     owner: req.session.account._id,
   };
   const newDomo = new Domo.DomoModel(domoData);
