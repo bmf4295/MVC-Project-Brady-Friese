@@ -127,13 +127,8 @@ var generatePet = function generatePet(e) {
 
 var addPetToDB = function addPetToDB(e) {
   e.preventDefault();
-  var data = {
-    name: document.querySelector('#petGeneratorName').dataset.name,
-    type: document.querySelector('#petGeneratorType').dataset.type,
-    breed: document.querySelector('#petGeneratorBreed').dataset.breed,
-    picture: document.querySelector('#petImage').src,
-    age: document.querySelector('#petGeneratorAge').dataset.age
-  };
+  var data = $("#addToDBForm").serialize();
+  console.log(data);
   sendAjax('POST', $("#addToDBForm").attr("action"), data, function (xhr, status, error) {
     loadPetsFromServer();
   });
@@ -145,30 +140,30 @@ var setPetData = function setPetData(data) {
 
   if (petData.photos) {
     document.querySelector('#petImage').src = petData.photos.large;
-    document.querySelector('#petImage').dataset.smallimage = petData.photos.small;
+    document.querySelector('#petToSavePicture').value = petData.photos.small;
   }
 
   document.querySelector('#petGeneratorName').innerHTML = "Name: ".concat(petData.name);
-  document.querySelector('#petGeneratorName').dataset.name = "".concat(petData.name);
+  document.querySelector('#petToSaveName').value = "".concat(petData.name);
   document.querySelector('#petGeneratorType').innerHTML = "Type of Animal:".concat(petData.animalType);
-  document.querySelector('#petGeneratorType').dataset.type = "".concat(petData.animalType);
+  document.querySelector('#petToSaveType').value = "".concat(petData.animalType);
 
   if (petData.secondary_Breed) {
     var breed = "".concat(petData.primary_Breed, " and ").concat(petData.secondary_Breed);
     document.querySelector('#petGeneratorBreed').innerHTML = "Breed: ".concat(breed);
-    document.querySelector('#petGeneratorBreed').dataset.breed = breed;
+    document.querySelector('#petToSaveBreed').value = breed;
   } else {
     document.querySelector('#petGeneratorBreed').innerHTML = "Breed: ".concat(petData.primary_Breed);
-    document.querySelector('#petGeneratorBreed').dataset.breed = "".concat(petData.primary_Breed);
+    document.querySelector('#petToSaveBreed').value = "".concat(petData.primary_Breed);
   }
 
   document.querySelector('#petGeneratorAge').innerHTML = "Age: ".concat(petData.age);
-  document.querySelector('#petGeneratorAge').dataset.age = "".concat(petData.age);
+  document.querySelector('#petToSaveAge').value = "".concat(petData.age);
   document.querySelector('#likePetInput').disabled = false;
 };
 
 var PetGenerator = function PetGenerator(props) {
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "petGeneration"
   }, /*#__PURE__*/React.createElement("div", {
     className: "petInfo"
@@ -201,7 +196,7 @@ var PetGenerator = function PetGenerator(props) {
     className: "generatePet",
     type: "submit",
     value: "Generate Pet"
-  })), /*#__PURE__*/React.createElement("form", {
+  }))), /*#__PURE__*/React.createElement("form", {
     id: "addToDBForm",
     onSubmit: addPetToDB,
     name: "petGenerateForm",
@@ -209,6 +204,32 @@ var PetGenerator = function PetGenerator(props) {
     method: "POST",
     className: "addToDBForm"
   }, /*#__PURE__*/React.createElement("input", {
+    id: "petToSaveName",
+    type: "hidden",
+    name: "name",
+    value: ""
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "petToSaveType",
+    type: "hidden",
+    name: "type",
+    value: ""
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "petToSaveBreed",
+    type: "hidden",
+    name: "breed",
+    value: ""
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "petToSavePicture",
+    type: "hidden",
+    name: "picture",
+    value: ""
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "petToSaveAge",
+    type: "hidden",
+    name: "age",
+    value: ""
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "csurf",
     type: "hidden",
     name: "_csrf",
     value: props.csrf

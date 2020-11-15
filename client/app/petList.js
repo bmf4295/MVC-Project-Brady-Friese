@@ -9,14 +9,9 @@ const generatePet = (e) => {
 
 const addPetToDB = (e)=>{
     e.preventDefault();
-    const data = {
-        name: document.querySelector('#petGeneratorName').dataset.name,
-        type: document.querySelector('#petGeneratorType').dataset.type,
-        breed: document.querySelector('#petGeneratorBreed').dataset.breed,
-        picture: document.querySelector('#petImage').src,
-        age:document.querySelector('#petGeneratorAge').dataset.age
-    };
-    sendAjax('POST', $("#addToDBForm").attr("action"), data,
+   const data = $("#addToDBForm").serialize()
+   console.log(data);
+    sendAjax('POST', $("#addToDBForm").attr("action"), data ,
      function (xhr, status, error) {
         loadPetsFromServer();
     });
@@ -28,28 +23,29 @@ const setPetData = (data) => {
 
     if (petData.photos) {
         document.querySelector('#petImage').src = petData.photos.large;
-        document.querySelector('#petImage').dataset.smallimage = petData.photos.small;
+        document.querySelector('#petToSavePicture').value = petData.photos.small;
     }
     document.querySelector('#petGeneratorName').innerHTML = `Name: ${petData.name}`;
-    document.querySelector('#petGeneratorName').dataset.name = `${petData.name}`;
+    document.querySelector('#petToSaveName').value = `${petData.name}`;
     document.querySelector('#petGeneratorType').innerHTML = `Type of Animal:${petData.animalType}`;
-    document.querySelector('#petGeneratorType').dataset.type = `${petData.animalType}`;
+    document.querySelector('#petToSaveType').value = `${petData.animalType}`;
     if (petData.secondary_Breed) {
         let breed = `${petData.primary_Breed} and ${petData.secondary_Breed}`
         document.querySelector('#petGeneratorBreed').innerHTML = `Breed: ${breed}`;
-        document.querySelector('#petGeneratorBreed').dataset.breed = breed;
+        document.querySelector('#petToSaveBreed').value = breed;
     } else {
         document.querySelector('#petGeneratorBreed').innerHTML = `Breed: ${petData.primary_Breed}`;
-        document.querySelector('#petGeneratorBreed').dataset.breed = `${petData.primary_Breed}`;
+        document.querySelector('#petToSaveBreed').value = `${petData.primary_Breed}`;
     }
     document.querySelector('#petGeneratorAge').innerHTML = `Age: ${petData.age}`;
-    document.querySelector('#petGeneratorAge').dataset.age = `${petData.age}`;
+    document.querySelector('#petToSaveAge').value = `${petData.age}`;
     document.querySelector('#likePetInput').disabled = false;
 };
 
 
 const PetGenerator = function (props) {
     return (
+        <div>
         <div className="petGeneration">
             <div className="petInfo">
                 <img id="petImage"></img>
@@ -68,7 +64,9 @@ const PetGenerator = function (props) {
                 <input type="hidden" name="_csrf" value={props.csrf} />
                 <input className="generatePet" type="submit" value="Generate Pet" />
             </form>
-            <form
+            
+        </div>
+        <form
                     id="addToDBForm"
                     onSubmit={addPetToDB}
                     name="petGenerateForm"
@@ -76,9 +74,14 @@ const PetGenerator = function (props) {
                     method="POST"
                     className="addToDBForm"
                 >
-                    <input type="hidden" name="_csrf" value={props.csrf} />
+                    <input id="petToSaveName" type="hidden" name="name" value="" />
+                    <input id="petToSaveType" type="hidden" name="type" value="" />
+                    <input id="petToSaveBreed" type="hidden" name="breed" value="" />
+                    <input id="petToSavePicture" type="hidden" name="picture" value="" />
+                    <input id="petToSaveAge" type="hidden" name="age" value="" />
+                    <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
                     <input id="likePetInput"  className="savePet" type="submit" value="Like Pet" disabled />
-                </form>
+            </form>
         </div>
     );
 };
