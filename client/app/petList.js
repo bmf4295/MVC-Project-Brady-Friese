@@ -1,3 +1,5 @@
+
+
 const generatePet = (e) => {
     e.preventDefault();
 
@@ -10,7 +12,6 @@ const generatePet = (e) => {
 const addPetToDB = (e)=>{
     e.preventDefault();
    const data = $("#addToDBForm").serialize()
-   console.log(data);
     sendAjax('POST', $("#addToDBForm").attr("action"), data ,
      function (xhr, status, error) {
         loadPetsFromServer();
@@ -98,7 +99,7 @@ const PetList = function (props) {
     const petNodes = props.pets.map(function (pet) {
         return (
             <div key={pet._id} className="pet">
-                <img src={pet.image} alt="An image of the pet" className="petImage" />
+                <img src={pet.picture} alt="An image of the pet" className="petImage" />
                 <h3 className="petName">Name: {pet.name} </h3>
                 <h3 className="petType">Type: {pet.type}</h3>
                 <h3 className="petBreed">Breed: {pet.breed}</h3>
@@ -114,22 +115,48 @@ const PetList = function (props) {
     );
 };
 
+const AccountDetails = function (props){
+    console.log(props);
+    return (
+        <div className="accountDetails">
+            <h3 className="accountUsername">Username: {props.account.username} </h3>
+            <h3 className="accountType">Type: Free</h3>
+            <h3 className="accountBirthday">Birthday: (Will be added later)</h3>
+            <h3 className="petAge">Age: (Will be added later)</h3>
+        </div>
+    );
+};
+
 const createPetGenerator = (csrf) => {
     ReactDOM.render(
         <PetGenerator csrf={csrf} />,
         document.querySelector("#petGenerator")
     );
 };
+
+
+const AccountDetailsPage = ()=>{
+    sendAjax('GET','/getAccountDetails',null, (data)=>{
+    ReactDOM.render(
+        <AccountDetails account={data}/>, document.querySelector("#petGenerator")
+    );
+    });
+}
 const loadPetsFromServer= ()=>{
     sendAjax('GET','/getPets',null, (data)=>{
         ReactDOM.render(
-            <DomoList pets={data.pets}/>, document.querySelector("#petGenerator")
+            <PetList pets={data.pets}/>, document.querySelector("#petGenerator")
         );
     });
 };
+
+
+
+
 const setup = function (csrf) {
     const generateButton = document.querySelector("#generateButton");
     const petListButton = document.querySelector("#listButton");
+    const accountButton = document.querySelector('#accountButton');
 
     generateButton.addEventListener("click", (e) => {
         e.preventDefault();
@@ -138,9 +165,14 @@ const setup = function (csrf) {
     });
     petListButton.addEventListener("click", (e) => {
         e.preventDefault();
-        createPetList(csrf);
+        loadPetsFromServer();
         return false;
     });
+    accountButton.addEventListener("click",(e)=>{
+        e.preventDefault();
+        AccountDetailsPage();
+        return false;
+    })
 
     createPetGenerator(csrf);
 

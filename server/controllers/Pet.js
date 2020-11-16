@@ -1,7 +1,6 @@
 const { request, response } = require('express');
 const petfinder = require('@petfinder/petfinder-js');
 const models = require('../models');
-const { json } = require('body-parser');
 
 const { Pet } = models;
 
@@ -17,7 +16,6 @@ const listPage = (req, res) => {
     });
 };
 const savePet = (req, res) => {
-    console.log('hello')
     if (!req.body.name || !req.body.age) {
         return res.status(400).json({ error: 'RAWR! Both name and age are required' });
     }
@@ -33,7 +31,7 @@ const savePet = (req, res) => {
 
     const petPromise = newPet.save();
 
-    petPromise.then(() => res.json({ redirect: '/maker' }));
+    petPromise.then(() => res.json({}));
 
     petPromise.catch((err) => {
         console.log(err);
@@ -48,13 +46,11 @@ const savePet = (req, res) => {
 const getPets = (request, response) => {
     const req = request;
     const res = response;
-
     return Pet.PetModel.findByOwner(req.session.account._id, (err, docs) => {
         if (err) {
             console.log(err);
             return res.status(400).json({ error: 'An error occured' });
         }
-
         return res.json({ pets: docs });
     });
 };
@@ -97,7 +93,6 @@ const handlePetData = (req,res,petData) => {
         }
 
     dataToReturn = JSON.stringify(dataToReturn);
-    console.log(dataToReturn)
     return res.json(dataToReturn);
 }catch(e){
     console.log(e);

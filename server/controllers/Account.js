@@ -109,6 +109,13 @@ const changePassword = (req, res) => {
   });
 };
 
+const getAccountDetails = (request,response)=>{
+  const req = request;
+  const res = response;
+  console.log(req.session.account)
+  res.json(req.session.account);
+}
+
 const getToken = (request, response) => {
   const req = request;
   const res = response;
@@ -124,3 +131,4 @@ module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.getToken = getToken;
+module.exports.getAccountDetails = getAccountDetails;

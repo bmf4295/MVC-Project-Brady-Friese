@@ -33,7 +33,7 @@ const PetSchema = new mongoose.Schema({
     picture: {
         type: String,
         trim: true,
-        required: true,
+        required: false,
     },
     owner: {
         type: mongoose.Schema.ObjectId,

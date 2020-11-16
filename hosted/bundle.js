@@ -128,7 +128,6 @@ var generatePet = function generatePet(e) {
 var addPetToDB = function addPetToDB(e) {
   e.preventDefault();
   var data = $("#addToDBForm").serialize();
-  console.log(data);
   sendAjax('POST', $("#addToDBForm").attr("action"), data, function (xhr, status, error) {
     loadPetsFromServer();
   });
@@ -257,7 +256,7 @@ var PetList = function PetList(props) {
       key: pet._id,
       className: "pet"
     }, /*#__PURE__*/React.createElement("img", {
-      src: pet.image,
+      src: pet.picture,
       alt: "An image of the pet",
       className: "petImage"
     }), /*#__PURE__*/React.createElement("h3", {
@@ -275,15 +274,38 @@ var PetList = function PetList(props) {
   }, petNodes);
 };
 
+var AccountDetails = function AccountDetails(props) {
+  console.log(props);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "accountDetails"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "accountUsername"
+  }, "Username: ", props.account.username, " "), /*#__PURE__*/React.createElement("h3", {
+    className: "accountType"
+  }, "Type: Free"), /*#__PURE__*/React.createElement("h3", {
+    className: "accountBirthday"
+  }, "Birthday: (Will be added later)"), /*#__PURE__*/React.createElement("h3", {
+    className: "petAge"
+  }, "Age: (Will be added later)"));
+};
+
 var createPetGenerator = function createPetGenerator(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(PetGenerator, {
     csrf: csrf
   }), document.querySelector("#petGenerator"));
 };
 
+var AccountDetailsPage = function AccountDetailsPage() {
+  sendAjax('GET', '/getAccountDetails', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(AccountDetails, {
+      account: data
+    }), document.querySelector("#petGenerator"));
+  });
+};
+
 var loadPetsFromServer = function loadPetsFromServer() {
   sendAjax('GET', '/getPets', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
+    ReactDOM.render( /*#__PURE__*/React.createElement(PetList, {
       pets: data.pets
     }), document.querySelector("#petGenerator"));
   });
@@ -292,6 +314,7 @@ var loadPetsFromServer = function loadPetsFromServer() {
 var setup = function setup(csrf) {
   var generateButton = document.querySelector("#generateButton");
   var petListButton = document.querySelector("#listButton");
+  var accountButton = document.querySelector('#accountButton');
   generateButton.addEventListener("click", function (e) {
     e.preventDefault();
     createPetGenerator(csrf);
@@ -299,7 +322,12 @@ var setup = function setup(csrf) {
   });
   petListButton.addEventListener("click", function (e) {
     e.preventDefault();
-    createPetList(csrf);
+    loadPetsFromServer();
+    return false;
+  });
+  accountButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    AccountDetailsPage();
     return false;
   });
   createPetGenerator(csrf);
