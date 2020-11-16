@@ -116,7 +116,6 @@ const PetList = function (props) {
 };
 
 const AccountDetails = function (props){
-    console.log(props);
     return (
         <div className="accountDetails">
             <h3 className="accountUsername">Username: {props.account.username} </h3>
