@@ -1,57 +1,57 @@
-const handleLogin = (e)=>{
+const handleLogin = (e) => {
     e.preventDefault();
-    $("#domoMessage").animate({width:'hide'},350);
+    $("#domoMessage").animate({ width: 'hide' }, 350);
 
-    if($("#user").val ==''||$("#pass").val()==''){
+    if ($("#user").val == '' || $("#pass").val() == '') {
         handleError("RAWR! Username or password is empty");
         return false;
     }
 
     console.log($("input[name=_csrf]").val());
 
-    sendAjax("POST",$("#loginForm").attr("action"),$("#loginForm").serialize(),redirect);
+    sendAjax("POST", $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
 
     return false;
 };
 
-const handleSignup = (e) =>{
+const handleSignup = (e) => {
     e.preventDefault();
 
-    $('#domoMessage').animate({width:'hide'},350);
+    $('#domoMessage').animate({ width: 'hide' }, 350);
 
-    if($("#user").val ==''||$("#pass").val()==''||$("#pass2").val()==''){
+    if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
-    if($("#pass").val() !== $("#pass2").val()){
+    if ($("#pass").val() !== $("#pass2").val()) {
         handleError("RAWR! Passwords do not match");
         return false;
     }
 
-    sendAjax("POST",$("#signupForm").attr("action"),$("#signupForm").serialize(),redirect);
+    sendAjax("POST", $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
 
     return false;
 }
-const handleReset = (e) =>{
+const handleReset = (e) => {
     e.preventDefault();
 
-    $('#domoMessage').animate({width:'hide'},350);
+    $('#domoMessage').animate({ width: 'hide' }, 350);
 
-    if($("#user").val ==''||$("#pass").val()==''||$("#pass2").val()==''){
+    if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
-    if($("#pass").val() !== $("#pass2").val()){
+    if ($("#pass").val() !== $("#pass2").val()) {
         handleError("RAWR! Passwords do not match");
         return false;
     }
 
-    sendAjax("POST",$("#resetForm").attr("action"),$("#resetForm").serialize(),redirect);
+    sendAjax("POST", $("#resetForm").attr("action"), $("#resetForm").serialize(), redirect);
 
     return false;
 }
-const LoginWindow = (props)=>{
-    return(
+const LoginWindow = (props) => {
+    return (
         <form id="loginForm" name="loginForm"
             onSubmit={handleLogin}
             action="/login"
@@ -59,17 +59,17 @@ const LoginWindow = (props)=>{
             className="mainForm"
         >
             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username"  placeholder="username"/>
+            <input id="user" type="text" name="username" placeholder="username" />
             <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass"  placeholder="password"/>
-            <input type="hidden" name="_csrf" value = {props.csrf}/>
-            <input className="formSubmit" type="submit" value="Sign in"/>
+            <input id="pass" type="password" name="pass" placeholder="password" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Sign in" />
         </form>
     );
 };
 
-const SignupWindow =(props)=>{
-    return(
+const SignupWindow = (props) => {
+    return (
         <form id="signupForm" name="signupForm"
             onSubmit={handleSignup}
             action="/signup"
@@ -77,23 +77,23 @@ const SignupWindow =(props)=>{
             className="mainForm"
         >
             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
+            <input id="user" type="text" name="username" placeholder="username" />
             <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass" type="password" name="pass" placeholder="password" />
             <label htmlFor="pass">Password: </label>
-            <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
+            <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <label htmlFor="birthday">Date of Birth: </label>
-            <input id="birthday" type="date" name="birthday" placeholder="1998-12-07"/>
+            <input id="birthday" type="date" name="birthday" placeholder="1998-12-07" />
             <label htmlFor="age">Age: </label>
-            <input id="age" type="number" name="age" placeholder="0" min="0" max = "150"/>
-            <input type="hidden" name="_csrf" value = {props.csrf}/>
-            <input className="formSubmit" type="submit" value="Sign in"/>
+            <input id="age" type="number" name="age" placeholder="0" min="0" max="150" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Sign in" />
         </form>
     );
 };
 
-const PasswordReset =(props)=>{
-    return(
+const PasswordReset = (props) => {
+    return (
         <form id="resetForm" name="resetForm"
             onSubmit={handleReset}
             action="/resetPassword"
@@ -101,53 +101,53 @@ const PasswordReset =(props)=>{
             className="mainForm"
         >
             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
+            <input id="user" type="text" name="username" placeholder="username" />
             <label htmlFor="pass">New Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass" type="password" name="pass" placeholder="password" />
             <label htmlFor="pass">New Password: </label>
-            <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
-            <input type="hidden" name="_csrf" value = {props.csrf}/>
-            <input className="formSubmit" type="submit" value="Reset"/>
+            <input id="pass2" type="password" name="pass2" placeholder="retype password" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Reset" />
         </form>
     );
 };
 
-const createLoginWindow =(csrf)=>{
+const createLoginWindow = (csrf) => {
     ReactDOM.render(
-        <LoginWindow csrf={csrf}/>, 
+        <LoginWindow csrf={csrf} />,
         document.querySelector('#content')
     );
 };
 
-const createSignupWindow =(csrf)=>{
+const createSignupWindow = (csrf) => {
     ReactDOM.render(
-        <SignupWindow csrf={csrf}/>,
+        <SignupWindow csrf={csrf} />,
         document.querySelector('#content')
     );
 };
 
-const createPasswordResetWindow =(csrf)=>{
+const createPasswordResetWindow = (csrf) => {
     ReactDOM.render(
-        <PasswordReset csrf={csrf}/>,
+        <PasswordReset csrf={csrf} />,
         document.querySelector('#content')
     );
 };
 
-const setup = (csrf)=>{
+const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
     const resetButton = document.querySelector("#resetPasswordButton");
-    signupButton.addEventListener("click",(e)=>{
+    signupButton.addEventListener("click", (e) => {
         e.preventDefault();
         createSignupWindow(csrf);
         return false;
     });
-    loginButton.addEventListener("click",(e)=>{
+    loginButton.addEventListener("click", (e) => {
         e.preventDefault();
         createLoginWindow(csrf);
         return false;
     });
-    resetButton.addEventListener("click",(e)=>{
+    resetButton.addEventListener("click", (e) => {
         e.preventDefault();
         createPasswordResetWindow(csrf);
         return false;
@@ -155,12 +155,12 @@ const setup = (csrf)=>{
     createLoginWindow(csrf);
 };
 
-const getToken = () =>{
-    sendAjax('GET','/getToken',null,(result)=>{
+const getToken = () => {
+    sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
     });
 };
 
-$(document).ready(function(){
+$(document).ready(function () {
     getToken();
 });

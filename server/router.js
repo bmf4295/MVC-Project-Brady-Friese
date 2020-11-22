@@ -13,7 +13,7 @@ const router = (app) => {
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
   app.get('/maker', mid.requiresLogin, controllers.Pet.listPage);
   app.get('/list', mid.requiresLogin, controllers.Pet.listPage);
-  app.post('/signupPremium',mid.requiresLogin,controllers.Account.signupPremium);
+  app.post('/signupPremium', mid.requiresLogin, controllers.Account.signupPremium);
   app.get('/getAccountDetails', mid.requiresLogin, controllers.Account.getAccountDetails);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

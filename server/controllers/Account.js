@@ -1,6 +1,5 @@
 const models = require('../models');
 const { AccountModel } = require('../models/Account');
-const { callPetDB } = require('./Pet');
 
 const { Account } = models;
 
@@ -33,7 +32,7 @@ const signup = (req, res) => {
   req.body.pass = `${req.body.pass}`;
   req.body.pass2 = `${req.body.pass2}`;
   req.body.birthday = `${req.body.birthday}`;
-  req.body.age =`${req.body.age}`;
+  req.body.age = `${req.body.age}`;
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
     return res.status(400).json({ error: 'RAWR! All fields are required' });
   }
@@ -47,7 +46,7 @@ const signup = (req, res) => {
       password: hash,
       birthday: req.body.birthday,
       age: req.body.age,
-      isPremium:false,
+      isPremium: false,
     };
 
     const newAccount = new Account.AccountModel(accountData);
@@ -116,21 +115,20 @@ const changePassword = (req, res) => {
   });
 };
 
-const signupPremium = (req,res)=>{
-
+const signupPremium = (req, res) => {
   if (!req.body.cardNumber) {
     return res.status(400).json({ error: 'You must put in a valid credit card number' });
   }
   req.body.cardNumber = `${req.body.cardNumber}`;
-  return Account.AccountModel.generateHash(req.body.cardNumber,(salt,hash)=>{
+  return Account.AccountModel.generateHash(req.body.cardNumber, (salt, hash) => {
     const newAccountData = {
-      creditCardNumberSalt:salt,
+      creditCardNumberSalt: salt,
       creditCardNumber: hash,
     };
     const search = {
       username: req.session.account.username,
     };
-    AccountModel.findOne(search, (err, foundAccount)=>{
+    AccountModel.findOne(search, (err, foundAccount) => {
       const account = foundAccount;
       if (err) {
         return res.status(400).json({ error: 'An error occured' });
@@ -151,17 +149,9 @@ const signupPremium = (req,res)=>{
         return res.status(400).json({ error: 'An error occurred' });
       });
       return false;
-
     });
-
-
-
   });
-
-
-}
-
-
+};
 
 
 const getAccountDetails = (request, response) => {

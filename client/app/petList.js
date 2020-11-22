@@ -9,25 +9,25 @@ const generatePet = (e) => {
     return false;
 };
 
-const addPetToDB = (e)=>{
+const addPetToDB = (e) => {
     e.preventDefault();
-   const data = $("#addToDBForm").serialize()
-    sendAjax('POST', $("#addToDBForm").attr("action"), data ,
-     function (xhr, status, error) {
-        loadPetsFromServer();
-    });
+    const data = $("#addToDBForm").serialize()
+    sendAjax('POST', $("#addToDBForm").attr("action"), data,
+        function (xhr, status, error) {
+            loadPetsFromServer();
+        });
     return false;
 }
 
-const signUpForPremium = (e)=>{
-    
+const signUpForPremium = (e) => {
+
     e.preventDefault();
     const data = $("#premiumSignupForm").serialize()
-    sendAjax('POST', $("#premiumSignupForm").attr("action"), data ,
-    function (xhr, status, error) {
-       console.log('Haaaaqaa');
-   });
-   return false;
+    sendAjax('POST', $("#premiumSignupForm").attr("action"), data,
+        function (xhr, status, error) {
+            console.log('Haaaaqaa');
+        });
+    return false;
 }
 
 
@@ -60,41 +60,41 @@ const setPetData = (data) => {
 const PetGenerator = function (props) {
     return (
         <div>
-        <div className="petGeneration">
-            <div className="petInfo">
-                <img id="petImage"></img>
-                <p id="petGeneratorName"></p>
-                <p id="petGeneratorType"></p>
-                <p id="petGeneratorBreed"></p>
-                <p id="petGeneratorAge"></p>
-            </div>
-            <form id="petGenerateForm"
-                onSubmit={generatePet}
-                name="petGenerateForm"
-                action="/callPetDB"
-                method="GET"
-                className="petGenerateForm"
-            >
-                <input type="hidden" name="_csrf" value={props.csrf} />
-                <input className="generatePet" type="submit" value="Generate Pet" />
-            </form>
-            
-        </div>
-        <form
-                    id="addToDBForm"
-                    onSubmit={addPetToDB}
+            <div className="petGeneration">
+                <div className="petInfo">
+                    <img id="petImage"></img>
+                    <p id="petGeneratorName"></p>
+                    <p id="petGeneratorType"></p>
+                    <p id="petGeneratorBreed"></p>
+                    <p id="petGeneratorAge"></p>
+                </div>
+                <form id="petGenerateForm"
+                    onSubmit={generatePet}
                     name="petGenerateForm"
-                    action="/savePetToDB"
-                    method="POST"
-                    className="addToDBForm"
+                    action="/callPetDB"
+                    method="GET"
+                    className="petGenerateForm"
                 >
-                    <input id="petToSaveName" type="hidden" name="name" value="" />
-                    <input id="petToSaveType" type="hidden" name="type" value="" />
-                    <input id="petToSaveBreed" type="hidden" name="breed" value="" />
-                    <input id="petToSavePicture" type="hidden" name="picture" value="" />
-                    <input id="petToSaveAge" type="hidden" name="age" value="" />
-                    <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
-                    <input id="likePetInput"  className="savePet" type="submit" value="Like Pet" disabled />
+                    <input type="hidden" name="_csrf" value={props.csrf} />
+                    <input className="generatePet" type="submit" value="Generate Pet" />
+                </form>
+
+            </div>
+            <form
+                id="addToDBForm"
+                onSubmit={addPetToDB}
+                name="petGenerateForm"
+                action="/savePetToDB"
+                method="POST"
+                className="addToDBForm"
+            >
+                <input id="petToSaveName" type="hidden" name="name" value="" />
+                <input id="petToSaveType" type="hidden" name="type" value="" />
+                <input id="petToSaveBreed" type="hidden" name="breed" value="" />
+                <input id="petToSavePicture" type="hidden" name="picture" value="" />
+                <input id="petToSaveAge" type="hidden" name="age" value="" />
+                <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
+                <input id="likePetInput" className="savePet" type="submit" value="Like Pet" disabled />
             </form>
         </div>
     );
@@ -128,9 +128,9 @@ const PetList = function (props) {
     );
 };
 
-const AccountDetails = function (props){
+const AccountDetails = function (props) {
     console.log(props);
-    if(props.account.isPremium === false){
+    if (props.account.isPremium === false) {
         return (
             <div className="accountDetails">
                 <h3 className="accountUsername">Username: {props.account.username} </h3>
@@ -139,7 +139,7 @@ const AccountDetails = function (props){
                 <h3 className="petAge">Age: {props.account.age}</h3>
             </div>
         );
-    }else{
+    } else {
         return (
             <div className="accountDetails">
                 <h3 className="accountUsername">Username: {props.account.username} </h3>
@@ -149,32 +149,32 @@ const AccountDetails = function (props){
             </div>
         );
     }
-    
+
 };
 
 
 
-const PremiumForm = function(props){
+const PremiumForm = function (props) {
 
-return (
-    <div className="premiumSignup">
-        <h2>Sign Up for Premium</h2>
-        <h4>Upgrade to premium for an ad-free experience! All for 5 dollars a month!</h4>
-        <form
-                    id="premiumSignupForm"
-                    onSubmit={signUpForPremium}
-                    name="premiumSignupForm"
-                    action="/signupPremium"
-                    method="POST"
-                    className="premiumSignupForm"
-                    >
-                    <label htmlFor="cardNumber">Credit Card Number: </label>
-                    <input id="cardNumber" type="text" name="cardNumber" placeholder="0000000000000000"/>
-                    <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
-                    <input className="formSubmit" type="submit" value="Sign Up for Premium"/>
-                    </form>
-    </div>
-)
+    return (
+        <div className="premiumSignup">
+            <h2>Sign Up for Premium</h2>
+            <h4>Upgrade to premium for an ad-free experience! All for 5 dollars a month!</h4>
+            <form
+                id="premiumSignupForm"
+                onSubmit={signUpForPremium}
+                name="premiumSignupForm"
+                action="/signupPremium"
+                method="POST"
+                className="premiumSignupForm"
+            >
+                <label htmlFor="cardNumber">Credit Card Number: </label>
+                <input id="cardNumber" type="text" name="cardNumber" placeholder="0000000000000000" />
+                <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
+                <input className="formSubmit" type="submit" value="Sign Up for Premium" />
+            </form>
+        </div>
+    )
 }
 
 const createPetGenerator = (csrf) => {
@@ -185,17 +185,17 @@ const createPetGenerator = (csrf) => {
 };
 
 
-const AccountDetailsPage = ()=>{
-    sendAjax('GET','/getAccountDetails',null, (data)=>{
-    ReactDOM.render(
-        <AccountDetails account={data}/>, document.querySelector("#petGenerator")
-    );
+const AccountDetailsPage = () => {
+    sendAjax('GET', '/getAccountDetails', null, (data) => {
+        ReactDOM.render(
+            <AccountDetails account={data} />, document.querySelector("#petGenerator")
+        );
     });
 }
-const loadPetsFromServer= ()=>{
-    sendAjax('GET','/getPets',null, (data)=>{
+const loadPetsFromServer = () => {
+    sendAjax('GET', '/getPets', null, (data) => {
         ReactDOM.render(
-            <PetList pets={data.pets}/>, document.querySelector("#petGenerator")
+            <PetList pets={data.pets} />, document.querySelector("#petGenerator")
         );
     });
 };
@@ -224,12 +224,12 @@ const setup = function (csrf) {
         loadPetsFromServer();
         return false;
     });
-    accountButton.addEventListener("click",(e)=>{
+    accountButton.addEventListener("click", (e) => {
         e.preventDefault();
         AccountDetailsPage();
         return false;
     })
-    premiumButton.addEventListener("click",(e)=>{
+    premiumButton.addEventListener("click", (e) => {
         e.preventDefault();
         createPremiumSignup(csrf);
         return false;
