@@ -25,7 +25,7 @@ const signUpForPremium = (e) => {
     const data = $("#premiumSignupForm").serialize()
     sendAjax('POST', $("#premiumSignupForm").attr("action"), data,
         function (xhr, status, error) {
-            console.log('Haaaaqaa');
+            AccountDetailsPage();
         });
     return false;
 }
@@ -129,7 +129,7 @@ const PetList = function (props) {
 };
 
 const AccountDetails = function (props) {
-    console.log(props);
+    localStorage.setItem('isPremium', props.account.isPremium);
     if (props.account.isPremium === false) {
         return (
             <div className="accountDetails">
@@ -174,9 +174,17 @@ const PremiumForm = function (props) {
                 <input className="formSubmit" type="submit" value="Sign Up for Premium" />
             </form>
         </div>
-    )
+    );
 }
 
+const AlreadyPremium = function () {
+    return (
+        <div className="premiumSignup">
+            <h2>You are already a Premium Member</h2>
+            <h4>Enjoy your ad-free experience!</h4>
+        </div>
+    );
+}
 const createPetGenerator = (csrf) => {
     ReactDOM.render(
         <PetGenerator csrf={csrf} />,
@@ -200,10 +208,19 @@ const loadPetsFromServer = () => {
     });
 };
 const createPremiumSignup = (csrf) => {
-    ReactDOM.render(
-        <PremiumForm csrf={csrf} />,
-        document.querySelector("#petGenerator")
-    );
+    sendAjax('GET', '/getAccountDetails', null, (data) => {
+        if (data.isPremium === false) {
+            ReactDOM.render(
+                <PremiumForm csrf={csrf} />,
+                document.querySelector("#petGenerator")
+            );
+        } else {
+            ReactDOM.render(
+                <AlreadyPremium />,
+                document.querySelector("#petGenerator")
+            );
+        }
+    });
 };
 
 
@@ -228,13 +245,12 @@ const setup = function (csrf) {
         e.preventDefault();
         AccountDetailsPage();
         return false;
-    })
+    });
     premiumButton.addEventListener("click", (e) => {
         e.preventDefault();
         createPremiumSignup(csrf);
         return false;
-    })
-
+    });
     createPetGenerator(csrf);
 
 };

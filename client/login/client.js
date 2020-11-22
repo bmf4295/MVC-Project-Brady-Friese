@@ -137,6 +137,7 @@ const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
     const resetButton = document.querySelector("#resetPasswordButton");
+  
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();
         createSignupWindow(csrf);
@@ -152,6 +153,7 @@ const setup = (csrf) => {
         createPasswordResetWindow(csrf);
         return false;
     });
+    
     createLoginWindow(csrf);
 };
 

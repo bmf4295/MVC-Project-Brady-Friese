@@ -138,7 +138,7 @@ var signUpForPremium = function signUpForPremium(e) {
   e.preventDefault();
   var data = $("#premiumSignupForm").serialize();
   sendAjax('POST', $("#premiumSignupForm").attr("action"), data, function (xhr, status, error) {
-    console.log('Haaaaqaa');
+    AccountDetailsPage();
   });
   return false;
 };
@@ -153,7 +153,7 @@ var setPetData = function setPetData(data) {
 
   document.querySelector('#petGeneratorName').innerHTML = "Name: ".concat(petData.name);
   document.querySelector('#petToSaveName').value = "".concat(petData.name);
-  document.querySelector('#petGeneratorType').innerHTML = "Type of Animal:".concat(petData.animalType);
+  document.querySelector('#petGeneratorType').innerHTML = "Type of Animal: ".concat(petData.animalType);
   document.querySelector('#petToSaveType').value = "".concat(petData.animalType);
 
   if (petData.secondary_Breed) {
@@ -280,7 +280,7 @@ var PetList = function PetList(props) {
 };
 
 var AccountDetails = function AccountDetails(props) {
-  console.log(props);
+  localStorage.setItem('isPremium', props.account.isPremium);
 
   if (props.account.isPremium === false) {
     return /*#__PURE__*/React.createElement("div", {
@@ -338,6 +338,12 @@ var PremiumForm = function PremiumForm(props) {
   })));
 };
 
+var AlreadyPremium = function AlreadyPremium() {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "premiumSignup"
+  }, /*#__PURE__*/React.createElement("h2", null, "You are already a Premium Member"), /*#__PURE__*/React.createElement("h4", null, "Enjoy your ad-free experience!"));
+};
+
 var createPetGenerator = function createPetGenerator(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(PetGenerator, {
     csrf: csrf
@@ -361,9 +367,15 @@ var loadPetsFromServer = function loadPetsFromServer() {
 };
 
 var createPremiumSignup = function createPremiumSignup(csrf) {
-  ReactDOM.render( /*#__PURE__*/React.createElement(PremiumForm, {
-    csrf: csrf
-  }), document.querySelector("#petGenerator"));
+  sendAjax('GET', '/getAccountDetails', null, function (data) {
+    if (data.isPremium === false) {
+      ReactDOM.render( /*#__PURE__*/React.createElement(PremiumForm, {
+        csrf: csrf
+      }), document.querySelector("#petGenerator"));
+    } else {
+      ReactDOM.render( /*#__PURE__*/React.createElement(AlreadyPremium, null), document.querySelector("#petGenerator"));
+    }
+  });
 };
 
 var setup = function setup(csrf) {
