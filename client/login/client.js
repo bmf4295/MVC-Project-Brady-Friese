@@ -82,6 +82,10 @@ const SignupWindow =(props)=>{
             <input id="pass" type="password" name="pass" placeholder="password"/>
             <label htmlFor="pass">Password: </label>
             <input id="pass2" type="password" name="pass2" placeholder="retype password"/>
+            <label htmlFor="birthday">Date of Birth: </label>
+            <input id="birthday" type="date" name="birthday" placeholder="1998-12-07"/>
+            <label htmlFor="age">Age: </label>
+            <input id="age" type="number" name="age" placeholder="0" min="0" max = "150"/>
             <input type="hidden" name="_csrf" value = {props.csrf}/>
             <input className="formSubmit" type="submit" value="Sign in"/>
         </form>

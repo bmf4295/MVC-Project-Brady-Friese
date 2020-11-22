@@ -118,6 +118,22 @@ var SignupWindow = function SignupWindow(props) {
     type: "password",
     name: "pass2",
     placeholder: "retype password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "birthday"
+  }, "Date of Birth: "), /*#__PURE__*/React.createElement("input", {
+    id: "birthday",
+    type: "date",
+    name: "birthday",
+    placeholder: "1998-12-07"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "age"
+  }, "Age: "), /*#__PURE__*/React.createElement("input", {
+    id: "age",
+    type: "number",
+    name: "age",
+    placeholder: "0",
+    min: "0",
+    max: "150"
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",

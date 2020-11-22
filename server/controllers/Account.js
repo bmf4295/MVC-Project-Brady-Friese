@@ -1,4 +1,6 @@
 const models = require('../models');
+const { AccountModel } = require('../models/Account');
+const { callPetDB } = require('./Pet');
 
 const { Account } = models;
 
@@ -23,13 +25,15 @@ const login = (req, res) => {
       return res.status(400).json({ error: 'Wrong username or password' });
     }
     req.session.account = Account.AccountModel.toAPI(account);
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/list' });
   });
 };
 const signup = (req, res) => {
   req.body.username = `${req.body.username}`;
   req.body.pass = `${req.body.pass}`;
   req.body.pass2 = `${req.body.pass2}`;
+  req.body.birthday = `${req.body.birthday}`;
+  req.body.age =`${req.body.age}`;
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
     return res.status(400).json({ error: 'RAWR! All fields are required' });
   }
@@ -41,6 +45,9 @@ const signup = (req, res) => {
       username: req.body.username,
       salt,
       password: hash,
+      birthday: req.body.birthday,
+      age: req.body.age,
+      isPremium:false,
     };
 
     const newAccount = new Account.AccountModel(accountData);
@@ -49,7 +56,7 @@ const signup = (req, res) => {
 
     savePromise.then(() => {
       req.session.account = Account.AccountModel.toAPI(newAccount);
-      res.json({ redirect: '/maker' });
+      res.json({ redirect: '/list' });
     });
 
     savePromise.catch((err) => {
@@ -70,10 +77,10 @@ const changePassword = (req, res) => {
   req.body.pass2 = `${req.body.pass2}`;
 
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
+    return res.status(400).json({ error: 'All fields are required' });
   }
   if (req.body.pass !== req.body.pass2) {
-    return res.status(400).json({ error: 'RAWR! Passwords do not match' });
+    return res.status(400).json({ error: 'Passwords do not match' });
   }
   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const newAccountData = {
@@ -98,7 +105,7 @@ const changePassword = (req, res) => {
       const savePromise = account.save();
       savePromise.then(() => {
         req.session.account = Account.AccountModel.toAPI(account);
-        res.json({ redirect: '/maker' });
+        res.json({ redirect: '/list' });
       });
       savePromise.catch((err2) => {
         console.log(err2);
@@ -108,6 +115,54 @@ const changePassword = (req, res) => {
     });
   });
 };
+
+const signupPremium = (req,res)=>{
+
+  if (!req.body.cardNumber) {
+    return res.status(400).json({ error: 'You must put in a valid credit card number' });
+  }
+  req.body.cardNumber = `${req.body.cardNumber}`;
+  return Account.AccountModel.generateHash(req.body.cardNumber,(salt,hash)=>{
+    const newAccountData = {
+      creditCardNumberSalt:salt,
+      creditCardNumber: hash,
+    };
+    const search = {
+      username: req.session.account.username,
+    };
+    AccountModel.findOne(search, (err, foundAccount)=>{
+      const account = foundAccount;
+      if (err) {
+        return res.status(400).json({ error: 'An error occured' });
+      }
+      if (!account) {
+        return res.status(404).json({ error: 'Account not found' });
+      }
+      account.creditCardNumberSalt = newAccountData.creditCardNumberSalt;
+      account.creditCardNumber = newAccountData.creditCardNumber;
+      account.isPremium = true;
+      const savePromise = account.save();
+      savePromise.then(() => {
+        req.session.account = Account.AccountModel.toAPI(account);
+        res.json({ redirect: '/list' });
+      });
+      savePromise.catch((err2) => {
+        console.log(err2);
+        return res.status(400).json({ error: 'An error occurred' });
+      });
+      return false;
+
+    });
+
+
+
+  });
+
+
+}
+
+
+
 
 const getAccountDetails = (request, response) => {
   const req = request;
@@ -131,3 +186,4 @@ module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.getToken = getToken;
 module.exports.getAccountDetails = getAccountDetails;
+module.exports.signupPremium = signupPremium;

@@ -19,6 +19,19 @@ const addPetToDB = (e)=>{
     return false;
 }
 
+const signUpForPremium = (e)=>{
+    
+    e.preventDefault();
+    const data = $("#premiumSignupForm").serialize()
+    sendAjax('POST', $("#premiumSignupForm").attr("action"), data ,
+    function (xhr, status, error) {
+       console.log('Haaaaqaa');
+   });
+   return false;
+}
+
+
+
 const setPetData = (data) => {
     const petData = JSON.parse(data);
 
@@ -28,7 +41,7 @@ const setPetData = (data) => {
     }
     document.querySelector('#petGeneratorName').innerHTML = `Name: ${petData.name}`;
     document.querySelector('#petToSaveName').value = `${petData.name}`;
-    document.querySelector('#petGeneratorType').innerHTML = `Type of Animal:${petData.animalType}`;
+    document.querySelector('#petGeneratorType').innerHTML = `Type of Animal: ${petData.animalType}`;
     document.querySelector('#petToSaveType').value = `${petData.animalType}`;
     if (petData.secondary_Breed) {
         let breed = `${petData.primary_Breed} and ${petData.secondary_Breed}`
@@ -50,10 +63,10 @@ const PetGenerator = function (props) {
         <div className="petGeneration">
             <div className="petInfo">
                 <img id="petImage"></img>
-                <p data-name="" id="petGeneratorName"></p>
-                <p data-type="" id="petGeneratorType"></p>
-                <p data-breed="" id="petGeneratorBreed"></p>
-                <p data-age="" id="petGeneratorAge"></p>
+                <p id="petGeneratorName"></p>
+                <p id="petGeneratorType"></p>
+                <p id="petGeneratorBreed"></p>
+                <p id="petGeneratorAge"></p>
             </div>
             <form id="petGenerateForm"
                 onSubmit={generatePet}
@@ -116,15 +129,53 @@ const PetList = function (props) {
 };
 
 const AccountDetails = function (props){
-    return (
-        <div className="accountDetails">
-            <h3 className="accountUsername">Username: {props.account.username} </h3>
-            <h3 className="accountType">Type: Free</h3>
-            <h3 className="accountBirthday">Birthday: (Will be added later)</h3>
-            <h3 className="petAge">Age: (Will be added later)</h3>
-        </div>
-    );
+    console.log(props);
+    if(props.account.isPremium === false){
+        return (
+            <div className="accountDetails">
+                <h3 className="accountUsername">Username: {props.account.username} </h3>
+                <h3 className="accountType">Account Type: Free</h3>
+                <h3 className="accountBirthday">Birthday: {props.account.birthday}</h3>
+                <h3 className="petAge">Age: {props.account.age}</h3>
+            </div>
+        );
+    }else{
+        return (
+            <div className="accountDetails">
+                <h3 className="accountUsername">Username: {props.account.username} </h3>
+                <h3 className="accountType">Account Type: Premium</h3>
+                <h3 className="accountBirthday">Birthday: {props.account.birthday}</h3>
+                <h3 className="petAge">Age: {props.account.age}</h3>
+            </div>
+        );
+    }
+    
 };
+
+
+
+const PremiumForm = function(props){
+
+return (
+    <div className="premiumSignup">
+        <h2>Sign Up for Premium</h2>
+        <h4>Upgrade to premium for an ad-free experience! All for 5 dollars a month!</h4>
+        <form
+                    id="premiumSignupForm"
+                    onSubmit={signUpForPremium}
+                    name="premiumSignupForm"
+                    action="/signupPremium"
+                    method="POST"
+                    className="premiumSignupForm"
+                    >
+                    <label htmlFor="cardNumber">Credit Card Number: </label>
+                    <input id="cardNumber" type="text" name="cardNumber" placeholder="0000000000000000"/>
+                    <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
+                    <input className="formSubmit" type="submit" value="Sign Up for Premium"/>
+                    </form>
+    </div>
+)
+}
 
 const createPetGenerator = (csrf) => {
     ReactDOM.render(
@@ -148,7 +199,12 @@ const loadPetsFromServer= ()=>{
         );
     });
 };
-
+const createPremiumSignup = (csrf) => {
+    ReactDOM.render(
+        <PremiumForm csrf={csrf} />,
+        document.querySelector("#petGenerator")
+    );
+};
 
 
 
@@ -156,6 +212,7 @@ const setup = function (csrf) {
     const generateButton = document.querySelector("#generateButton");
     const petListButton = document.querySelector("#listButton");
     const accountButton = document.querySelector('#accountButton');
+    const premiumButton = document.querySelector('#premiumButton');
 
     generateButton.addEventListener("click", (e) => {
         e.preventDefault();
@@ -170,6 +227,11 @@ const setup = function (csrf) {
     accountButton.addEventListener("click",(e)=>{
         e.preventDefault();
         AccountDetailsPage();
+        return false;
+    })
+    premiumButton.addEventListener("click",(e)=>{
+        e.preventDefault();
+        createPremiumSignup(csrf);
         return false;
     })
 

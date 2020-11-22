@@ -134,6 +134,15 @@ var addPetToDB = function addPetToDB(e) {
   return false;
 };
 
+var signUpForPremium = function signUpForPremium(e) {
+  e.preventDefault();
+  var data = $("#premiumSignupForm").serialize();
+  sendAjax('POST', $("#premiumSignupForm").attr("action"), data, function (xhr, status, error) {
+    console.log('Haaaaqaa');
+  });
+  return false;
+};
+
 var setPetData = function setPetData(data) {
   var petData = JSON.parse(data);
 
@@ -169,16 +178,12 @@ var PetGenerator = function PetGenerator(props) {
   }, /*#__PURE__*/React.createElement("img", {
     id: "petImage"
   }), /*#__PURE__*/React.createElement("p", {
-    "data-name": "",
     id: "petGeneratorName"
   }), /*#__PURE__*/React.createElement("p", {
-    "data-type": "",
     id: "petGeneratorType"
   }), /*#__PURE__*/React.createElement("p", {
-    "data-breed": "",
     id: "petGeneratorBreed"
   }), /*#__PURE__*/React.createElement("p", {
-    "data-age": "",
     id: "petGeneratorAge"
   })), /*#__PURE__*/React.createElement("form", {
     id: "petGenerateForm",
@@ -276,17 +281,61 @@ var PetList = function PetList(props) {
 
 var AccountDetails = function AccountDetails(props) {
   console.log(props);
+
+  if (props.account.isPremium === false) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "accountDetails"
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: "accountUsername"
+    }, "Username: ", props.account.username, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "accountType"
+    }, "Account Type: Free"), /*#__PURE__*/React.createElement("h3", {
+      className: "accountBirthday"
+    }, "Birthday: ", props.account.birthday), /*#__PURE__*/React.createElement("h3", {
+      className: "petAge"
+    }, "Age: ", props.account.age));
+  } else {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "accountDetails"
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: "accountUsername"
+    }, "Username: ", props.account.username, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "accountType"
+    }, "Account Type: Premium"), /*#__PURE__*/React.createElement("h3", {
+      className: "accountBirthday"
+    }, "Birthday: ", props.account.birthday), /*#__PURE__*/React.createElement("h3", {
+      className: "petAge"
+    }, "Age: ", props.account.age));
+  }
+};
+
+var PremiumForm = function PremiumForm(props) {
   return /*#__PURE__*/React.createElement("div", {
-    className: "accountDetails"
-  }, /*#__PURE__*/React.createElement("h3", {
-    className: "accountUsername"
-  }, "Username: ", props.account.username, " "), /*#__PURE__*/React.createElement("h3", {
-    className: "accountType"
-  }, "Type: Free"), /*#__PURE__*/React.createElement("h3", {
-    className: "accountBirthday"
-  }, "Birthday: (Will be added later)"), /*#__PURE__*/React.createElement("h3", {
-    className: "petAge"
-  }, "Age: (Will be added later)"));
+    className: "premiumSignup"
+  }, /*#__PURE__*/React.createElement("h2", null, "Sign Up for Premium"), /*#__PURE__*/React.createElement("h4", null, "Upgrade to premium for an ad-free experience! All for 5 dollars a month!"), /*#__PURE__*/React.createElement("form", {
+    id: "premiumSignupForm",
+    onSubmit: signUpForPremium,
+    name: "premiumSignupForm",
+    action: "/signupPremium",
+    method: "POST",
+    className: "premiumSignupForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "cardNumber"
+  }, "Credit Card Number: "), /*#__PURE__*/React.createElement("input", {
+    id: "cardNumber",
+    type: "text",
+    name: "cardNumber",
+    placeholder: "0000000000000000"
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "csurf",
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "formSubmit",
+    type: "submit",
+    value: "Sign Up for Premium"
+  })));
 };
 
 var createPetGenerator = function createPetGenerator(csrf) {
@@ -311,10 +360,17 @@ var loadPetsFromServer = function loadPetsFromServer() {
   });
 };
 
+var createPremiumSignup = function createPremiumSignup(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(PremiumForm, {
+    csrf: csrf
+  }), document.querySelector("#petGenerator"));
+};
+
 var setup = function setup(csrf) {
   var generateButton = document.querySelector("#generateButton");
   var petListButton = document.querySelector("#listButton");
   var accountButton = document.querySelector('#accountButton');
+  var premiumButton = document.querySelector('#premiumButton');
   generateButton.addEventListener("click", function (e) {
     e.preventDefault();
     createPetGenerator(csrf);
@@ -328,6 +384,11 @@ var setup = function setup(csrf) {
   accountButton.addEventListener("click", function (e) {
     e.preventDefault();
     AccountDetailsPage();
+    return false;
+  });
+  premiumButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createPremiumSignup(csrf);
     return false;
   });
   createPetGenerator(csrf);
