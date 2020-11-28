@@ -30,7 +30,15 @@ const signUpForPremium = (e) => {
     return false;
 }
 
-
+const checkIfAdFree =()=>{
+    sendAjax('GET', '/getAccountDetails', null, (data)=>{
+        if(data.isPremium === true){
+            document.querySelector('#adSpace').style = 'hidden'
+        }else{
+            document.querySelector('#adSpace').style = 'visible'
+        }
+    });
+}
 
 const setPetData = (data) => {
     const petData = JSON.parse(data);
@@ -38,6 +46,9 @@ const setPetData = (data) => {
     if (petData.photos) {
         document.querySelector('#petImage').src = petData.photos.large;
         document.querySelector('#petToSavePicture').value = petData.photos.small;
+    }else{
+        document.querySelector('#petImage').src = "/assets/img/placeholder_image.png";
+        document.querySelector('#petToSavePicture').value = "/assets/img/placeholder_image_small.png";
     }
     document.querySelector('#petGeneratorName').innerHTML = `Name: ${petData.name}`;
     document.querySelector('#petToSaveName').value = `${petData.name}`;
@@ -58,6 +69,7 @@ const setPetData = (data) => {
 
 
 const PetGenerator = function (props) {
+    
     return (
         <div>
             <div className="petGeneration">
@@ -96,6 +108,7 @@ const PetGenerator = function (props) {
                 <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
                 <input id="likePetInput" className="savePet" type="submit" value="Like Pet" disabled />
             </form>
+            
         </div>
     );
 };
@@ -129,7 +142,6 @@ const PetList = function (props) {
 };
 
 const AccountDetails = function (props) {
-    localStorage.setItem('isPremium', props.account.isPremium);
     if (props.account.isPremium === false) {
         return (
             <div className="accountDetails">
@@ -186,6 +198,7 @@ const AlreadyPremium = function () {
     );
 }
 const createPetGenerator = (csrf) => {
+    checkIfAdFree();
     ReactDOM.render(
         <PetGenerator csrf={csrf} />,
         document.querySelector("#petGenerator")
@@ -194,6 +207,7 @@ const createPetGenerator = (csrf) => {
 
 
 const AccountDetailsPage = () => {
+    checkIfAdFree();
     sendAjax('GET', '/getAccountDetails', null, (data) => {
         ReactDOM.render(
             <AccountDetails account={data} />, document.querySelector("#petGenerator")
@@ -201,6 +215,7 @@ const AccountDetailsPage = () => {
     });
 }
 const loadPetsFromServer = () => {
+    checkIfAdFree();
     sendAjax('GET', '/getPets', null, (data) => {
         ReactDOM.render(
             <PetList pets={data.pets} />, document.querySelector("#petGenerator")
@@ -208,6 +223,7 @@ const loadPetsFromServer = () => {
     });
 };
 const createPremiumSignup = (csrf) => {
+    checkIfAdFree();
     sendAjax('GET', '/getAccountDetails', null, (data) => {
         if (data.isPremium === false) {
             ReactDOM.render(

@@ -2,7 +2,7 @@
 
 var handleLogin = function handleLogin(e) {
   e.preventDefault();
-  $("#domoMessage").animate({
+  $("#petMessage").animate({
     width: 'hide'
   }, 350);
 
@@ -18,7 +18,7 @@ var handleLogin = function handleLogin(e) {
 
 var handleSignup = function handleSignup(e) {
   e.preventDefault();
-  $('#domoMessage').animate({
+  $('#petMessage').animate({
     width: 'hide'
   }, 350);
 
@@ -38,7 +38,7 @@ var handleSignup = function handleSignup(e) {
 
 var handleReset = function handleReset(e) {
   e.preventDefault();
-  $('#domoMessage').animate({
+  $('#petMessage').animate({
     width: 'hide'
   }, 350);
 
@@ -141,7 +141,7 @@ var SignupWindow = function SignupWindow(props) {
   }), /*#__PURE__*/React.createElement("input", {
     className: "formSubmit",
     type: "submit",
-    value: "Sign in"
+    value: "Sign up"
   }));
 };
 
@@ -238,13 +238,13 @@ $(document).ready(function () {
 
 var handleError = function handleError(message) {
   $('#errorMessage').text(message);
-  $('#domoMessage').animate({
+  $('#petMessage').animate({
     width: 'toggle'
   }, 350);
 };
 
 var redirect = function redirect(response) {
-  $('#domoMessage').animate({
+  $('#petMessage').animate({
     width: 'hide'
   }, 350);
   window.location = response.redirect;

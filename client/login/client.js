@@ -1,6 +1,6 @@
 const handleLogin = (e) => {
     e.preventDefault();
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#petMessage").animate({ width: 'hide' }, 350);
 
     if ($("#user").val == '' || $("#pass").val() == '') {
         handleError("RAWR! Username or password is empty");
@@ -17,7 +17,7 @@ const handleLogin = (e) => {
 const handleSignup = (e) => {
     e.preventDefault();
 
-    $('#domoMessage').animate({ width: 'hide' }, 350);
+    $('#petMessage').animate({ width: 'hide' }, 350);
 
     if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required");
@@ -35,7 +35,7 @@ const handleSignup = (e) => {
 const handleReset = (e) => {
     e.preventDefault();
 
-    $('#domoMessage').animate({ width: 'hide' }, 350);
+    $('#petMessage').animate({ width: 'hide' }, 350);
 
     if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required");
@@ -87,7 +87,7 @@ const SignupWindow = (props) => {
             <label htmlFor="age">Age: </label>
             <input id="age" type="number" name="age" placeholder="0" min="0" max="150" />
             <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign in" />
+            <input className="formSubmit" type="submit" value="Sign up" />
         </form>
     );
 };

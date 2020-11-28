@@ -11,7 +11,6 @@ const router = (app) => {
   app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
   app.post('/resetPassword', mid.requiresSecure, mid.requiresLogout, controllers.Account.resetPassword);
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
-  app.get('/maker', mid.requiresLogin, controllers.Pet.listPage);
   app.get('/list', mid.requiresLogin, controllers.Pet.listPage);
   app.post('/signupPremium', mid.requiresLogin, controllers.Account.signupPremium);
   app.get('/getAccountDetails', mid.requiresLogin, controllers.Account.getAccountDetails);

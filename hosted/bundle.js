@@ -1,122 +1,5 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
-  e.preventDefault();
-  $("#domoMessage").animate({
-    width: 'hide'
-  }, 350);
-
-  if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
-    handleError("RAWR! All fields are required");
-    return false;
-  }
-
-  sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-    loadDomosFromServer();
-  });
-  return false;
-};
-
-var DomoForm = function DomoForm(props) {
-  return /*#__PURE__*/React.createElement("form", {
-    id: "domoForm",
-    onSubmit: handleDomo,
-    name: "domoForm",
-    action: "/maker",
-    method: "POST",
-    className: "domoForm"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "name"
-  }, "Name: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoName",
-    type: "text",
-    name: "name",
-    placeholder: "Domo Name"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "age"
-  }, "Age: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoAge",
-    type: "text",
-    name: "age",
-    placeholder: "Domo Age"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "age"
-  }, "Level: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoLevel",
-    type: "text",
-    name: "level",
-    placeholder: "Domo Level"
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "hidden",
-    name: "_csrf",
-    value: props.csrf
-  }), /*#__PURE__*/React.createElement("input", {
-    className: "makeDomoSubmit",
-    type: "submit",
-    value: "Make Domo"
-  }));
-};
-
-var DomoList = function DomoList(props) {
-  if (props.domos.length === 0) {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "domoList"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "emptyDomo"
-    }, "No Domos yet"));
-  }
-
-  ;
-  var domoNodes = props.domos.map(function (domo) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: domo._id,
-      className: "domo"
-    }, /*#__PURE__*/React.createElement("img", {
-      src: "/assets/img/domoface.jpeg",
-      alt: "domo face",
-      className: "domoFace"
-    }), /*#__PURE__*/React.createElement("h3", {
-      className: "domoName"
-    }, "Name: ", domo.name, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "domoLevel"
-    }, "Level: ", domo.level), /*#__PURE__*/React.createElement("h3", {
-      className: "domoAge"
-    }, "Age: ", domo.age));
-  });
-  return /*#__PURE__*/React.createElement("div", {
-    className: "domoList"
-  }, domoNodes);
-};
-
-var loadDomosFromServer = function loadDomosFromServer() {
-  sendAjax('GET', '/getDomos', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
-      domos: data.domos
-    }), document.querySelector("#domos"));
-  });
-};
-
-var setup = function setup(csrf) {
-  ReactDOM.render( /*#__PURE__*/React.createElement(DomoForm, {
-    csrf: csrf
-  }), document.querySelector("#makeDomo"));
-  ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
-    domos: []
-  }), document.querySelector("#domos"));
-  loadDomosFromServer();
-};
-
-var getToken = function getToken() {
-  sendAjax('GET', '/getToken', null, function (results) {
-    setup(results.csrfToken);
-  });
-};
-
-$(document).ready(function () {
-  getToken();
-});
-"use strict";
-
 var generatePet = function generatePet(e) {
   e.preventDefault();
   sendAjax('GET', $("#petGenerateForm").attr("action"), {}, function (xhr, status, error) {
@@ -143,12 +26,25 @@ var signUpForPremium = function signUpForPremium(e) {
   return false;
 };
 
+var checkIfAdFree = function checkIfAdFree() {
+  sendAjax('GET', '/getAccountDetails', null, function (data) {
+    if (data.isPremium === true) {
+      document.querySelector('#adSpace').style = 'hidden';
+    } else {
+      document.querySelector('#adSpace').style = 'visible';
+    }
+  });
+};
+
 var setPetData = function setPetData(data) {
   var petData = JSON.parse(data);
 
   if (petData.photos) {
     document.querySelector('#petImage').src = petData.photos.large;
     document.querySelector('#petToSavePicture').value = petData.photos.small;
+  } else {
+    document.querySelector('#petImage').src = "/assets/img/placeholder_image.png";
+    document.querySelector('#petToSavePicture').value = "/assets/img/placeholder_image_small.png";
   }
 
   document.querySelector('#petGeneratorName').innerHTML = "Name: ".concat(petData.name);
@@ -280,8 +176,6 @@ var PetList = function PetList(props) {
 };
 
 var AccountDetails = function AccountDetails(props) {
-  localStorage.setItem('isPremium', props.account.isPremium);
-
   if (props.account.isPremium === false) {
     return /*#__PURE__*/React.createElement("div", {
       className: "accountDetails"
@@ -345,12 +239,14 @@ var AlreadyPremium = function AlreadyPremium() {
 };
 
 var createPetGenerator = function createPetGenerator(csrf) {
+  checkIfAdFree();
   ReactDOM.render( /*#__PURE__*/React.createElement(PetGenerator, {
     csrf: csrf
   }), document.querySelector("#petGenerator"));
 };
 
 var AccountDetailsPage = function AccountDetailsPage() {
+  checkIfAdFree();
   sendAjax('GET', '/getAccountDetails', null, function (data) {
     ReactDOM.render( /*#__PURE__*/React.createElement(AccountDetails, {
       account: data
@@ -359,6 +255,7 @@ var AccountDetailsPage = function AccountDetailsPage() {
 };
 
 var loadPetsFromServer = function loadPetsFromServer() {
+  checkIfAdFree();
   sendAjax('GET', '/getPets', null, function (data) {
     ReactDOM.render( /*#__PURE__*/React.createElement(PetList, {
       pets: data.pets
@@ -367,6 +264,7 @@ var loadPetsFromServer = function loadPetsFromServer() {
 };
 
 var createPremiumSignup = function createPremiumSignup(csrf) {
+  checkIfAdFree();
   sendAjax('GET', '/getAccountDetails', null, function (data) {
     if (data.isPremium === false) {
       ReactDOM.render( /*#__PURE__*/React.createElement(PremiumForm, {
@@ -419,13 +317,13 @@ $(document).ready(function () {
 
 var handleError = function handleError(message) {
   $('#errorMessage').text(message);
-  $('#domoMessage').animate({
+  $('#petMessage').animate({
     width: 'toggle'
   }, 350);
 };
 
 var redirect = function redirect(response) {
-  $('#domoMessage').animate({
+  $('#petMessage').animate({
     width: 'hide'
   }, 350);
   window.location = response.redirect;
