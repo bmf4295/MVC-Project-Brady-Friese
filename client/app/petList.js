@@ -33,9 +33,9 @@ const signUpForPremium = (e) => {
 const checkIfAdFree =()=>{
     sendAjax('GET', '/getAccountDetails', null, (data)=>{
         if(data.isPremium === true){
-            document.querySelector('#adSpace').style = 'hidden'
+            document.querySelector('#adSpace').style.visibility = 'hidden'
         }else{
-            document.querySelector('#adSpace').style = 'visible'
+            document.querySelector('#adSpace').style.visibility = 'visible'
         }
     });
 }
