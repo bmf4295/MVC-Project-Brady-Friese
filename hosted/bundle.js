@@ -2,6 +2,7 @@
 
 var generatePet = function generatePet(e) {
   e.preventDefault();
+  document.querySelector('#errorMessage').innerHTML = "";
   sendAjax('GET', $("#petGenerateForm").attr("action"), {}, function (xhr, status, error) {
     setPetData(xhr);
   });
@@ -29,9 +30,9 @@ var signUpForPremium = function signUpForPremium(e) {
 var checkIfAdFree = function checkIfAdFree() {
   sendAjax('GET', '/getAccountDetails', null, function (data) {
     if (data.isPremium === true) {
-      document.querySelector('#adSpace').style = 'hidden';
+      document.querySelector('#adSpace').style.visibility = 'hidden';
     } else {
-      document.querySelector('#adSpace').style = 'visible';
+      document.querySelector('#adSpace').style.visibility = 'visible';
     }
   });
 };
@@ -40,10 +41,10 @@ var setPetData = function setPetData(data) {
   var petData = JSON.parse(data);
 
   if (petData.photos) {
-    document.querySelector('#petImage').src = petData.photos.large;
+    document.querySelector('#generatorImage').src = petData.photos.large;
     document.querySelector('#petToSavePicture').value = petData.photos.small;
   } else {
-    document.querySelector('#petImage').src = "/assets/img/placeholder_image.png";
+    document.querySelector('#generatorImage').src = "/assets/img/placeholder_image.png";
     document.querySelector('#petToSavePicture').value = "/assets/img/placeholder_image_small.png";
   }
 
@@ -63,7 +64,7 @@ var setPetData = function setPetData(data) {
 
   document.querySelector('#petGeneratorAge').innerHTML = "Age: ".concat(petData.age);
   document.querySelector('#petToSaveAge').value = "".concat(petData.age);
-  document.querySelector('#likePetInput').disabled = false;
+  document.querySelector('#savePet').disabled = false;
 };
 
 var PetGenerator = function PetGenerator(props) {
@@ -72,14 +73,18 @@ var PetGenerator = function PetGenerator(props) {
   }, /*#__PURE__*/React.createElement("div", {
     className: "petInfo"
   }, /*#__PURE__*/React.createElement("img", {
-    id: "petImage"
+    id: "generatorImage"
   }), /*#__PURE__*/React.createElement("p", {
+    className: "generatorInfo",
     id: "petGeneratorName"
   }), /*#__PURE__*/React.createElement("p", {
+    className: "generatorInfo",
     id: "petGeneratorType"
   }), /*#__PURE__*/React.createElement("p", {
+    className: "generatorInfo",
     id: "petGeneratorBreed"
   }), /*#__PURE__*/React.createElement("p", {
+    className: "generatorInfo",
     id: "petGeneratorAge"
   })), /*#__PURE__*/React.createElement("form", {
     id: "petGenerateForm",
@@ -93,9 +98,10 @@ var PetGenerator = function PetGenerator(props) {
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
-    className: "generatePet",
+    id: "genPet",
+    className: "inputSubmit",
     type: "submit",
-    value: "Generate Pet"
+    value: "Generate"
   }))), /*#__PURE__*/React.createElement("form", {
     id: "addToDBForm",
     onSubmit: addPetToDB,
@@ -134,8 +140,8 @@ var PetGenerator = function PetGenerator(props) {
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
-    id: "likePetInput",
-    className: "savePet",
+    id: "savePet",
+    className: "inputSubmit",
     type: "submit",
     value: "Like Pet",
     disabled: true
@@ -156,19 +162,23 @@ var PetList = function PetList(props) {
     return /*#__PURE__*/React.createElement("div", {
       key: pet._id,
       className: "pet"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "listImage"
     }, /*#__PURE__*/React.createElement("img", {
       src: pet.picture,
       alt: "An image of the pet",
       className: "petImage"
-    }), /*#__PURE__*/React.createElement("h3", {
-      className: "petName"
-    }, "Name: ", pet.name, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "petType"
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "listInfo"
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: "petListInfo"
+    }, "Name: ", pet.name), /*#__PURE__*/React.createElement("h3", {
+      className: "petListInfo"
     }, "Type: ", pet.type), /*#__PURE__*/React.createElement("h3", {
-      className: "petBreed"
+      className: "petListInfo"
     }, "Breed: ", pet.breed), /*#__PURE__*/React.createElement("h3", {
-      className: "petAge"
-    }, "Age: ", pet.age));
+      className: "petListInfo"
+    }, "Age: ", pet.age)));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "petList"
@@ -226,7 +236,7 @@ var PremiumForm = function PremiumForm(props) {
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
-    className: "formSubmit",
+    className: "premiumSubmit",
     type: "submit",
     value: "Sign Up for Premium"
   })));

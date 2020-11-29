@@ -2,7 +2,7 @@
 
 const generatePet = (e) => {
     e.preventDefault();
-
+document.querySelector('#errorMessage').innerHTML = "";
     sendAjax('GET', $("#petGenerateForm").attr("action"), {}, function (xhr, status, error) {
         setPetData(xhr);
     });
@@ -44,10 +44,10 @@ const setPetData = (data) => {
     const petData = JSON.parse(data);
 
     if (petData.photos) {
-        document.querySelector('#petImage').src = petData.photos.large;
+        document.querySelector('#generatorImage').src = petData.photos.large;
         document.querySelector('#petToSavePicture').value = petData.photos.small;
     }else{
-        document.querySelector('#petImage').src = "/assets/img/placeholder_image.png";
+        document.querySelector('#generatorImage').src = "/assets/img/placeholder_image.png";
         document.querySelector('#petToSavePicture').value = "/assets/img/placeholder_image_small.png";
     }
     document.querySelector('#petGeneratorName').innerHTML = `Name: ${petData.name}`;
@@ -64,7 +64,7 @@ const setPetData = (data) => {
     }
     document.querySelector('#petGeneratorAge').innerHTML = `Age: ${petData.age}`;
     document.querySelector('#petToSaveAge').value = `${petData.age}`;
-    document.querySelector('#likePetInput').disabled = false;
+    document.querySelector('#savePet').disabled = false;
 };
 
 
@@ -74,11 +74,11 @@ const PetGenerator = function (props) {
         <div>
             <div className="petGeneration">
                 <div className="petInfo">
-                    <img id="petImage"></img>
-                    <p id="petGeneratorName"></p>
-                    <p id="petGeneratorType"></p>
-                    <p id="petGeneratorBreed"></p>
-                    <p id="petGeneratorAge"></p>
+                    <img id="generatorImage"></img>
+                    <p className="generatorInfo" id="petGeneratorName"></p>
+                    <p className="generatorInfo" id="petGeneratorType"></p>
+                    <p className="generatorInfo" id="petGeneratorBreed"></p>
+                    <p className="generatorInfo" id="petGeneratorAge"></p>
                 </div>
                 <form id="petGenerateForm"
                     onSubmit={generatePet}
@@ -88,7 +88,7 @@ const PetGenerator = function (props) {
                     className="petGenerateForm"
                 >
                     <input type="hidden" name="_csrf" value={props.csrf} />
-                    <input className="generatePet" type="submit" value="Generate Pet" />
+                    <input id="genPet" className="inputSubmit" type="submit" value="Generate" />
                 </form>
 
             </div>
@@ -106,7 +106,7 @@ const PetGenerator = function (props) {
                 <input id="petToSavePicture" type="hidden" name="picture" value="" />
                 <input id="petToSaveAge" type="hidden" name="age" value="" />
                 <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
-                <input id="likePetInput" className="savePet" type="submit" value="Like Pet" disabled />
+                <input id="savePet" className="inputSubmit" type="submit" value="Like Pet" disabled />
             </form>
             
         </div>
@@ -125,11 +125,13 @@ const PetList = function (props) {
     const petNodes = props.pets.map(function (pet) {
         return (
             <div key={pet._id} className="pet">
-                <img src={pet.picture} alt="An image of the pet" className="petImage" />
-                <h3 className="petName">Name: {pet.name} </h3>
-                <h3 className="petType">Type: {pet.type}</h3>
-                <h3 className="petBreed">Breed: {pet.breed}</h3>
-                <h3 className="petAge">Age: {pet.age}</h3>
+                <div className="listImage"><img src={pet.picture} alt="An image of the pet" className="petImage" /></div>
+              <div className="listInfo">
+                <h3 className="petListInfo">Name: {pet.name}</h3>
+                <h3 className="petListInfo">Type: {pet.type}</h3>
+                <h3 className="petListInfo">Breed: {pet.breed}</h3>
+                <h3 className="petListInfo">Age: {pet.age}</h3>
+                </div>
             </div>
         );
     });
@@ -183,7 +185,7 @@ const PremiumForm = function (props) {
                 <label htmlFor="cardNumber">Credit Card Number: </label>
                 <input id="cardNumber" type="text" name="cardNumber" placeholder="0000000000000000" />
                 <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
-                <input className="formSubmit" type="submit" value="Sign Up for Premium" />
+                <input className="premiumSubmit" type="submit" value="Sign Up for Premium" />
             </form>
         </div>
     );
