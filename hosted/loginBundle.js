@@ -1,322 +1,233 @@
 "use strict";
 
-var generatePet = function generatePet(e) {
+var handleLogin = function handleLogin(e) {
   e.preventDefault();
-  document.querySelector('#errorMessage').innerHTML = "";
-  sendAjax('GET', $("#petGenerateForm").attr("action"), {}, function (xhr, status, error) {
-    setPetData(xhr);
-  });
-  return false;
-};
+  $("#petMessage").animate({
+    width: 'hide'
+  }, 350);
 
-var addPetToDB = function addPetToDB(e) {
-  e.preventDefault();
-  var data = $("#addToDBForm").serialize();
-  sendAjax('POST', $("#addToDBForm").attr("action"), data, function (xhr, status, error) {
-    loadPetsFromServer();
-  });
-  return false;
-};
-
-var signUpForPremium = function signUpForPremium(e) {
-  e.preventDefault();
-  var data = $("#premiumSignupForm").serialize();
-  sendAjax('POST', $("#premiumSignupForm").attr("action"), data, function (xhr, status, error) {
-    AccountDetailsPage();
-  });
-  return false;
-};
-
-var checkIfAdFree = function checkIfAdFree() {
-  sendAjax('GET', '/getAccountDetails', null, function (data) {
-    if (data.isPremium === true) {
-      document.querySelector('#adSpace').style.visibility = 'hidden';
-    } else {
-      document.querySelector('#adSpace').style.visibility = 'visible';
-    }
-  });
-};
-
-var setPetData = function setPetData(data) {
-  var petData = JSON.parse(data);
-
-  if (petData.photos) {
-    document.querySelector('#generatorImage').src = petData.photos.large;
-    document.querySelector('#petToSavePicture').value = petData.photos.small;
-  } else {
-    document.querySelector('#generatorImage').src = "/assets/img/placeholder_image.png";
-    document.querySelector('#petToSavePicture').value = "/assets/img/placeholder_image_small.png";
+  if ($("#user").val == '' || $("#pass").val() == '') {
+    handleError("Username or password is empty");
+    return false;
   }
 
-  document.querySelector('#petGeneratorName').innerHTML = "Name: ".concat(petData.name);
-  document.querySelector('#petToSaveName').value = "".concat(petData.name);
-  document.querySelector('#petGeneratorType').innerHTML = "Type of Animal: ".concat(petData.animalType);
-  document.querySelector('#petToSaveType').value = "".concat(petData.animalType);
-
-  if (petData.secondary_Breed) {
-    var breed = "".concat(petData.primary_Breed, " and ").concat(petData.secondary_Breed);
-    document.querySelector('#petGeneratorBreed').innerHTML = "Breed: ".concat(breed);
-    document.querySelector('#petToSaveBreed').value = breed;
-  } else {
-    document.querySelector('#petGeneratorBreed').innerHTML = "Breed: ".concat(petData.primary_Breed);
-    document.querySelector('#petToSaveBreed').value = "".concat(petData.primary_Breed);
-  }
-
-  document.querySelector('#petGeneratorAge').innerHTML = "Age: ".concat(petData.age);
-  document.querySelector('#petToSaveAge').value = "".concat(petData.age);
-  document.querySelector('#savePet').disabled = false;
+  console.log($("input[name=_csrf]").val());
+  sendAjax("POST", $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
+  return false;
 };
 
-var PetGenerator = function PetGenerator(props) {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "petGeneration"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "petInfo"
-  }, /*#__PURE__*/React.createElement("img", {
-    id: "generatorImage"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "generatorInfo",
-    id: "petGeneratorName"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "generatorInfo",
-    id: "petGeneratorType"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "generatorInfo",
-    id: "petGeneratorBreed"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "generatorInfo",
-    id: "petGeneratorAge"
-  })), /*#__PURE__*/React.createElement("form", {
-    id: "petGenerateForm",
-    onSubmit: generatePet,
-    name: "petGenerateForm",
-    action: "/callPetDB",
-    method: "GET",
-    className: "petGenerateForm"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "hidden",
-    name: "_csrf",
-    value: props.csrf
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "genPet",
-    className: "inputSubmit",
-    type: "submit",
-    value: "Generate"
-  }))), /*#__PURE__*/React.createElement("form", {
-    id: "addToDBForm",
-    onSubmit: addPetToDB,
-    name: "petGenerateForm",
-    action: "/savePetToDB",
+var handleSignup = function handleSignup(e) {
+  e.preventDefault();
+  $('#petMessage').animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '' || $("#birthday").val() == '' || $("#age").val() == '') {
+    handleError("All fields are required");
+    return false;
+  }
+
+  if ($("#pass").val() !== $("#pass2").val()) {
+    handleError("Passwords do not match");
+    return false;
+  }
+
+  sendAjax("POST", $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
+  return false;
+};
+
+var handleReset = function handleReset(e) {
+  e.preventDefault();
+  $('#petMessage').animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
+    handleError("All fields are required");
+    return false;
+  }
+
+  if ($("#pass").val() !== $("#pass2").val()) {
+    handleError("Passwords do not match");
+    return false;
+  }
+
+  sendAjax("POST", $("#resetForm").attr("action"), $("#resetForm").serialize(), redirect);
+  return false;
+};
+
+var LoginWindow = function LoginWindow(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "loginForm",
+    name: "loginForm",
+    onSubmit: handleLogin,
+    action: "/login",
     method: "POST",
-    className: "addToDBForm"
-  }, /*#__PURE__*/React.createElement("input", {
-    id: "petToSaveName",
-    type: "hidden",
-    name: "name",
-    value: ""
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "petToSaveType",
-    type: "hidden",
-    name: "type",
-    value: ""
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "petToSaveBreed",
-    type: "hidden",
-    name: "breed",
-    value: ""
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "petToSavePicture",
-    type: "hidden",
-    name: "picture",
-    value: ""
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "petToSaveAge",
-    type: "hidden",
-    name: "age",
-    value: ""
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "csurf",
-    type: "hidden",
-    name: "_csrf",
-    value: props.csrf
-  }), /*#__PURE__*/React.createElement("input", {
-    id: "savePet",
-    className: "inputSubmit",
-    type: "submit",
-    value: "Like Pet",
-    disabled: true
-  })));
-};
-
-var PetList = function PetList(props) {
-  if (props.pets.length === 0) {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "petList"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "emptyPets"
-    }, "No Pets yet"));
-  }
-
-  ;
-  var petNodes = props.pets.map(function (pet) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: pet._id,
-      className: "pet"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "listImage"
-    }, /*#__PURE__*/React.createElement("img", {
-      src: pet.picture,
-      alt: "An image of the pet",
-      className: "petImage"
-    })), /*#__PURE__*/React.createElement("div", {
-      className: "listInfo"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "petListInfo"
-    }, "Name: ", pet.name), /*#__PURE__*/React.createElement("h3", {
-      className: "petListInfo"
-    }, "Type: ", pet.type), /*#__PURE__*/React.createElement("h3", {
-      className: "petListInfo"
-    }, "Breed: ", pet.breed), /*#__PURE__*/React.createElement("h3", {
-      className: "petListInfo"
-    }, "Age: ", pet.age)));
-  });
-  return /*#__PURE__*/React.createElement("div", {
-    className: "petList"
-  }, petNodes);
-};
-
-var AccountDetails = function AccountDetails(props) {
-  if (props.account.isPremium === false) {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "accountDetails"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "accountUsername"
-    }, "Username: ", props.account.username, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "accountType"
-    }, "Account Type: Free"), /*#__PURE__*/React.createElement("h3", {
-      className: "accountBirthday"
-    }, "Birthday: ", props.account.birthday), /*#__PURE__*/React.createElement("h3", {
-      className: "petAge"
-    }, "Age: ", props.account.age));
-  } else {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "accountDetails"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "accountUsername"
-    }, "Username: ", props.account.username, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "accountType"
-    }, "Account Type: Premium"), /*#__PURE__*/React.createElement("h3", {
-      className: "accountBirthday"
-    }, "Birthday: ", props.account.birthday), /*#__PURE__*/React.createElement("h3", {
-      className: "petAge"
-    }, "Age: ", props.account.age));
-  }
-};
-
-var PremiumForm = function PremiumForm(props) {
-  return /*#__PURE__*/React.createElement("div", {
-    className: "premiumSignup"
-  }, /*#__PURE__*/React.createElement("h2", null, "Sign Up for Premium"), /*#__PURE__*/React.createElement("h4", null, "Upgrade to premium for an ad-free experience! All for 5 dollars a month!"), /*#__PURE__*/React.createElement("form", {
-    id: "premiumSignupForm",
-    onSubmit: signUpForPremium,
-    name: "premiumSignupForm",
-    action: "/signupPremium",
-    method: "POST",
-    className: "premiumSignupForm"
+    className: "mainForm"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "cardNumber"
-  }, "Credit Card Number: "), /*#__PURE__*/React.createElement("input", {
-    id: "cardNumber",
+    htmlFor: "username"
+  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "user",
     type: "text",
-    name: "cardNumber",
-    placeholder: "0000000000000000"
+    name: "username",
+    placeholder: "username"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass",
+    type: "password",
+    name: "pass",
+    placeholder: "password"
   }), /*#__PURE__*/React.createElement("input", {
-    id: "csurf",
     type: "hidden",
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
-    className: "premiumSubmit",
+    className: "inputSubmit",
     type: "submit",
-    value: "Sign Up for Premium"
-  })));
+    value: "Sign in"
+  }));
 };
 
-var AlreadyPremium = function AlreadyPremium() {
-  return /*#__PURE__*/React.createElement("div", {
-    className: "premiumSignup"
-  }, /*#__PURE__*/React.createElement("h2", null, "You are already a Premium Member"), /*#__PURE__*/React.createElement("h4", null, "Enjoy your ad-free experience!"));
+var SignupWindow = function SignupWindow(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "signupForm",
+    name: "signupForm",
+    onSubmit: handleSignup,
+    action: "/signup",
+    method: "POST",
+    className: "mainForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "user",
+    type: "text",
+    name: "username",
+    placeholder: "username"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass",
+    type: "password",
+    name: "pass",
+    placeholder: "password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass2",
+    type: "password",
+    name: "pass2",
+    placeholder: "retype password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "birthday"
+  }, "Date of Birth: "), /*#__PURE__*/React.createElement("input", {
+    id: "birthday",
+    type: "date",
+    name: "birthday",
+    placeholder: "1998-12-07"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "age"
+  }, "Age: "), /*#__PURE__*/React.createElement("input", {
+    id: "age",
+    type: "number",
+    name: "age",
+    placeholder: "0",
+    min: "0",
+    max: "150"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "inputSubmit",
+    type: "submit",
+    value: "Sign up"
+  }));
 };
 
-var createPetGenerator = function createPetGenerator(csrf) {
-  checkIfAdFree();
-  ReactDOM.render( /*#__PURE__*/React.createElement(PetGenerator, {
+var PasswordReset = function PasswordReset(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "resetForm",
+    name: "resetForm",
+    onSubmit: handleReset,
+    action: "/resetPassword",
+    method: "POST",
+    className: "mainForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "user",
+    type: "text",
+    name: "username",
+    placeholder: "username"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "New Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass",
+    type: "password",
+    name: "pass",
+    placeholder: "password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "pass"
+  }, "New Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "pass2",
+    type: "password",
+    name: "pass2",
+    placeholder: "retype password"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "inputSubmit",
+    type: "submit",
+    value: "Reset"
+  }));
+};
+
+var createLoginWindow = function createLoginWindow(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(LoginWindow, {
     csrf: csrf
-  }), document.querySelector("#petGenerator"));
+  }), document.querySelector('#content'));
 };
 
-var AccountDetailsPage = function AccountDetailsPage() {
-  checkIfAdFree();
-  sendAjax('GET', '/getAccountDetails', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(AccountDetails, {
-      account: data
-    }), document.querySelector("#petGenerator"));
-  });
+var createSignupWindow = function createSignupWindow(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(SignupWindow, {
+    csrf: csrf
+  }), document.querySelector('#content'));
 };
 
-var loadPetsFromServer = function loadPetsFromServer() {
-  checkIfAdFree();
-  sendAjax('GET', '/getPets', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(PetList, {
-      pets: data.pets
-    }), document.querySelector("#petGenerator"));
-  });
-};
-
-var createPremiumSignup = function createPremiumSignup(csrf) {
-  checkIfAdFree();
-  sendAjax('GET', '/getAccountDetails', null, function (data) {
-    if (data.isPremium === false) {
-      ReactDOM.render( /*#__PURE__*/React.createElement(PremiumForm, {
-        csrf: csrf
-      }), document.querySelector("#petGenerator"));
-    } else {
-      ReactDOM.render( /*#__PURE__*/React.createElement(AlreadyPremium, null), document.querySelector("#petGenerator"));
-    }
-  });
+var createPasswordResetWindow = function createPasswordResetWindow(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(PasswordReset, {
+    csrf: csrf
+  }), document.querySelector('#content'));
 };
 
 var setup = function setup(csrf) {
-  var generateButton = document.querySelector("#generateButton");
-  var petListButton = document.querySelector("#listButton");
-  var accountButton = document.querySelector('#accountButton');
-  var premiumButton = document.querySelector('#premiumButton');
-  generateButton.addEventListener("click", function (e) {
+  var loginButton = document.querySelector("#loginButton");
+  var signupButton = document.querySelector("#signupButton");
+  var resetButton = document.querySelector("#resetPasswordButton");
+  signupButton.addEventListener("click", function (e) {
     e.preventDefault();
-    createPetGenerator(csrf);
+    createSignupWindow(csrf);
     return false;
   });
-  petListButton.addEventListener("click", function (e) {
+  loginButton.addEventListener("click", function (e) {
     e.preventDefault();
-    loadPetsFromServer();
+    createLoginWindow(csrf);
     return false;
   });
-  accountButton.addEventListener("click", function (e) {
+  resetButton.addEventListener("click", function (e) {
     e.preventDefault();
-    AccountDetailsPage();
+    createPasswordResetWindow(csrf);
     return false;
   });
-  premiumButton.addEventListener("click", function (e) {
-    e.preventDefault();
-    createPremiumSignup(csrf);
-    return false;
-  });
-  createPetGenerator(csrf);
+  createLoginWindow(csrf);
 };
 
 var getToken = function getToken() {
-  sendAjax('GET', '/getToken', null, function (results) {
-    setup(results.csrfToken);
+  sendAjax('GET', '/getToken', null, function (result) {
+    setup(result.csrfToken);
   });
 };
 
@@ -327,6 +238,13 @@ $(document).ready(function () {
 
 var handleError = function handleError(message) {
   $('#errorMessage').text(message);
+  $('#petMessage').animate({
+    width: 'toggle'
+  }, 350);
+};
+
+var handleLoginError = function handleLoginError(message) {
+  $('#loginErrorMessage').text(message);
   $('#petMessage').animate({
     width: 'toggle'
   }, 350);

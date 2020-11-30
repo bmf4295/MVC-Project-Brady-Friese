@@ -2,7 +2,6 @@
 
 const generatePet = (e) => {
     e.preventDefault();
-document.querySelector('#errorMessage').innerHTML = "";
     sendAjax('GET', $("#petGenerateForm").attr("action"), {}, function (xhr, status, error) {
         setPetData(xhr);
     });
@@ -20,8 +19,12 @@ const addPetToDB = (e) => {
 }
 
 const signUpForPremium = (e) => {
-
     e.preventDefault();
+    if ($("#cardNumber").val == '') {
+        handleError("All fields are required");
+        return false;
+    }
+
     const data = $("#premiumSignupForm").serialize()
     sendAjax('POST', $("#premiumSignupForm").attr("action"), data,
         function (xhr, status, error) {
@@ -30,11 +33,11 @@ const signUpForPremium = (e) => {
     return false;
 }
 
-const checkIfAdFree =()=>{
-    sendAjax('GET', '/getAccountDetails', null, (data)=>{
-        if(data.isPremium === true){
+const checkIfAdFree = () => {
+    sendAjax('GET', '/getAccountDetails', null, (data) => {
+        if (data.isPremium === true) {
             document.querySelector('#adSpace').style.visibility = 'hidden'
-        }else{
+        } else {
             document.querySelector('#adSpace').style.visibility = 'visible'
         }
     });
@@ -46,32 +49,33 @@ const setPetData = (data) => {
     if (petData.photos) {
         document.querySelector('#generatorImage').src = petData.photos.large;
         document.querySelector('#petToSavePicture').value = petData.photos.small;
-    }else{
+    } else {
         document.querySelector('#generatorImage').src = "/assets/img/placeholder_image.png";
         document.querySelector('#petToSavePicture').value = "/assets/img/placeholder_image_small.png";
     }
-    document.querySelector('#petGeneratorName').innerHTML = `Name: ${petData.name}`;
+    document.querySelector('#petGeneratorName').innerHTML = `<b>Name:</b> ${petData.name}`;
     document.querySelector('#petToSaveName').value = `${petData.name}`;
-    document.querySelector('#petGeneratorType').innerHTML = `Type of Animal: ${petData.animalType}`;
+    document.querySelector('#petGeneratorType').innerHTML = `<b>Type of Animal:</b> ${petData.animalType}`;
     document.querySelector('#petToSaveType').value = `${petData.animalType}`;
     if (petData.secondary_Breed) {
         let breed = `${petData.primary_Breed} and ${petData.secondary_Breed}`
-        document.querySelector('#petGeneratorBreed').innerHTML = `Breed: ${breed}`;
+        document.querySelector('#petGeneratorBreed').innerHTML = `<b>Breed:</b> ${breed}`;
         document.querySelector('#petToSaveBreed').value = breed;
     } else {
-        document.querySelector('#petGeneratorBreed').innerHTML = `Breed: ${petData.primary_Breed}`;
+        document.querySelector('#petGeneratorBreed').innerHTML = `<b>Breed:</b> ${petData.primary_Breed}`;
         document.querySelector('#petToSaveBreed').value = `${petData.primary_Breed}`;
     }
-    document.querySelector('#petGeneratorAge').innerHTML = `Age: ${petData.age}`;
+    document.querySelector('#petGeneratorAge').innerHTML = `<b>Age:</b> ${petData.age}`;
     document.querySelector('#petToSaveAge').value = `${petData.age}`;
     document.querySelector('#savePet').disabled = false;
 };
 
 
 const PetGenerator = function (props) {
-    
+
     return (
         <div>
+            <h1 className="heading">Pet Generator</h1>
             <div className="petGeneration">
                 <div className="petInfo">
                     <img id="generatorImage"></img>
@@ -108,7 +112,7 @@ const PetGenerator = function (props) {
                 <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
                 <input id="savePet" className="inputSubmit" type="submit" value="Like Pet" disabled />
             </form>
-            
+
         </div>
     );
 };
@@ -118,7 +122,7 @@ const PetList = function (props) {
         return (
             <div className="petList">
 
-                <h3 className="emptyPets">No Pets yet</h3>
+                <h1 className="heading">No Pets yet</h1>
             </div>
         );
     };
@@ -126,11 +130,11 @@ const PetList = function (props) {
         return (
             <div key={pet._id} className="pet">
                 <div className="listImage"><img src={pet.picture} alt="An image of the pet" className="petImage" /></div>
-              <div className="listInfo">
-                <h3 className="petListInfo">Name: {pet.name}</h3>
-                <h3 className="petListInfo">Type: {pet.type}</h3>
-                <h3 className="petListInfo">Breed: {pet.breed}</h3>
-                <h3 className="petListInfo">Age: {pet.age}</h3>
+                <div className="listInfo">
+                    <h3 className="petListInfo">Name: {pet.name}</h3>
+                    <h3 className="petListInfo">Type: {pet.type}</h3>
+                    <h3 className="petListInfo">Breed: {pet.breed}</h3>
+                    <h3 className="petListInfo">Age: {pet.age}</h3>
                 </div>
             </div>
         );
@@ -138,28 +142,36 @@ const PetList = function (props) {
 
     return (
         <div className="petList">
+            <h1 className="heading">Your liked Pets</h1>
             {petNodes}
         </div>
     );
 };
 
 const AccountDetails = function (props) {
+    document.querySelector('#errorMessage').innerHTML = "";
     if (props.account.isPremium === false) {
         return (
-            <div className="accountDetails">
-                <h3 className="accountUsername">Username: {props.account.username} </h3>
-                <h3 className="accountType">Account Type: Free</h3>
-                <h3 className="accountBirthday">Birthday: {props.account.birthday}</h3>
-                <h3 className="petAge">Age: {props.account.age}</h3>
+            <div>
+                <h1 className="heading">Account Details</h1>
+                <div className="accountDetails">
+                    <p className="detail"><b>Username:</b> {props.account.username} </p>
+                    <p className="detail"><b>Account Type:</b> Free</p>
+                    <p className="detail"><b>Birthday:</b> {props.account.birthday}</p>
+                    <p className="detail"><b>Age:</b> {props.account.age}</p>
+                </div>
             </div>
         );
     } else {
         return (
-            <div className="accountDetails">
-                <h3 className="accountUsername">Username: {props.account.username} </h3>
-                <h3 className="accountType">Account Type: Premium</h3>
-                <h3 className="accountBirthday">Birthday: {props.account.birthday}</h3>
-                <h3 className="petAge">Age: {props.account.age}</h3>
+            <div>
+                <h1 className="heading">Account Details</h1>
+                <div className="accountDetails">
+                    <p className="detail"><b>Username:</b> {props.account.username} </p>
+                    <p className="detail"><b>Account Type:</b> Premium</p>
+                    <p className="detail"><b>Birthday:</b> {props.account.birthday}</p>
+                    <p className="detail"><b>Age:</b> {props.account.age}</p>
+                </div>
             </div>
         );
     }
@@ -169,11 +181,11 @@ const AccountDetails = function (props) {
 
 
 const PremiumForm = function (props) {
-
+    document.querySelector('#errorMessage').innerHTML = "";
     return (
         <div className="premiumSignup">
-            <h2>Sign Up for Premium</h2>
-            <h4>Upgrade to premium for an ad-free experience! All for 5 dollars a month!</h4>
+            <h1 className="heading">Sign Up for Premium</h1>
+            <h3>Upgrade to premium for an ad-free experience! All for 5 dollars a month!</h3>
             <form
                 id="premiumSignupForm"
                 onSubmit={signUpForPremium}
@@ -185,21 +197,23 @@ const PremiumForm = function (props) {
                 <label htmlFor="cardNumber">Credit Card Number: </label>
                 <input id="cardNumber" type="text" name="cardNumber" placeholder="0000000000000000" />
                 <input id="csurf" type="hidden" name="_csrf" value={props.csrf} />
-                <input className="premiumSubmit" type="submit" value="Sign Up for Premium" />
+                <input className="inputSubmit" type="submit" value="Sign Up" />
             </form>
         </div>
     );
 }
 
 const AlreadyPremium = function () {
+    document.querySelector('#errorMessage').innerHTML = "";
     return (
-        <div className="premiumSignup">
-            <h2>You are already a Premium Member</h2>
-            <h4>Enjoy your ad-free experience!</h4>
+        <div className="alreadyPremium">
+            <h1 className="heading">You are already a Premium Member</h1>
+            <h2>Enjoy your ad-free experience!</h2>
         </div>
     );
 }
 const createPetGenerator = (csrf) => {
+    document.querySelector('#errorMessage').innerHTML = "";
     checkIfAdFree();
     ReactDOM.render(
         <PetGenerator csrf={csrf} />,
@@ -209,6 +223,7 @@ const createPetGenerator = (csrf) => {
 
 
 const AccountDetailsPage = () => {
+    document.querySelector('#errorMessage').innerHTML = "";
     checkIfAdFree();
     sendAjax('GET', '/getAccountDetails', null, (data) => {
         ReactDOM.render(
@@ -217,6 +232,7 @@ const AccountDetailsPage = () => {
     });
 }
 const loadPetsFromServer = () => {
+    document.querySelector('#errorMessage').innerHTML = "";
     checkIfAdFree();
     sendAjax('GET', '/getPets', null, (data) => {
         ReactDOM.render(
@@ -225,6 +241,7 @@ const loadPetsFromServer = () => {
     });
 };
 const createPremiumSignup = (csrf) => {
+    document.querySelector('#errorMessage').innerHTML = "";
     checkIfAdFree();
     sendAjax('GET', '/getAccountDetails', null, (data) => {
         if (data.isPremium === false) {

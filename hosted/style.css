@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab&display=swap');
 html, body {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: 'Roboto', sans-serif;
+    background-color: #EDC7B7;
 }
 
 #logo {
@@ -17,7 +20,7 @@ html, body {
 nav {
     width: 100%;
     height: 50px;
-    background-color: #55acee;
+    background-color: #AC3B61;
 }
 
 nav:nth-child(1) {
@@ -38,13 +41,13 @@ nav:nth-child(1) {
     text-decoration: none;
     padding: 5px;
     border-radius: 4px;
-    background-color: #55acee;
+    background-color: #AC3B61;
     transition: background-color 0.4s ease;
 }
 
 .navlink a:hover {
     transition: background-color 0.8s ease;
-    background-color: #66bdff;
+    background-color: #8a2f4e;
 }
 
 .mainForm {
@@ -75,9 +78,9 @@ nav:nth-child(1) {
     margin-top: 14px;
     font-size: 1.2em;
     width: 100px;
-    background-color: #55acee;
+    background-color: #AC3B61;
     border-radius: 2px;
-    border-color: #66acee;
+    border-color: #AC3B61;
     padding: 3px 0px;
     color: white;
     text-decoration: none;
@@ -89,29 +92,31 @@ nav:nth-child(1) {
 
 .formSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: #8a2f4e;
 }
 
-#user, #pass, #pass2 {
+#user, #pass, #pass2,#birthday, #age, #cardNumber {
     text-align: center;
     font-size: 1.1em;
     width: 180px;
     border-radius: 6px;
+    margin-top: 3px;
 }
 
 #user:focus, #pass:focus, #pass2:focus {
     outline: none;
-    box-shadow: 0px 0px 1px 1px #55acee;
+    box-shadow: 0px 0px 1px 1px #AC3B61;
+
 }
 
 #petMessage {
     display:none;
-    top: 250px;
+    top: 82%;
     width: 250px;
     height: 650px;
     position: absolute;
     z-index: 200;
-    right: 0px;
+    right: 41%;
     overflow: hidden;
 }
 
@@ -135,16 +140,6 @@ nav:nth-child(1) {
     font-style: italic;
 }
 
-#dog {
-    z-index: 225;
-    margin-top: -20px;
-    margin-left: 135px;
-    height: 450px;
-    width: 300px;
-    -ms-transform: rotate(330deg);
-    -webkit-transform: rotate(330deg); 
-    transform: rotate(330deg);
-}
 #adSpace{
     position:absolute;
     bottom:0;
@@ -154,6 +149,7 @@ nav:nth-child(1) {
 #adSpace img{
     display: block;
     margin: 0 auto;
+    margin-top: 1em;
     width:80%;
     height:4em;
 }
@@ -162,22 +158,38 @@ nav:nth-child(1) {
     transition: background-color 0.4s ease;
     display: block;
     text-align: center;
-    margin: 0 auto;
+    margin: 10px auto;
     font-size: 1.2em;
     width: 100px;
-    background-color: #55acee;
-    border-radius: 2px;
-    border-color: #66acee;
+    background-color: #AC3B61;
+    border-radius: 10px;
+    border-color: #AC3B61;
     padding: 3px 10px;
     color: white;
     text-decoration: none;
 }
 
+.inputSubmit:disabled{
+    transition: background-color 0.4s ease;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 1.2em;
+    width: 100px;
+    background-color: #BAB2B5;
+    border-radius: 10px;
+    border-color: #BAB2B5;
+    padding: 3px 10px;
+    color: white;
+    text-decoration: none;
+}
+
+
 #generatorImage{
     display: block;
     margin: 0 auto;
-    max-height: 500px;
-    max-width: 500px;
+    max-height: 300px;
+    max-width: 300px;
 }
 
 .generatorInfo{
@@ -187,16 +199,24 @@ nav:nth-child(1) {
 }
 
 .petInfo{
-    margin: auto;
-    width: 60%;
+    padding: 1em 0;
+    margin:1em auto ;
+    margin-top: 3em;
+    width: 40%;
+    height: 525px;
     padding: 1em;
     justify-content: center;
+    background-color: #AC3B61;
+    border: 2px solid #AC3B61;
+    border-radius: 10px;
 }
 
-.listImage{
-float: left;
-padding-bottom: 10px;
-margin: 0 1.2em;
+.listImage img{
+    max-width: 100px;
+    max-height: 100px;
+    float: left;
+    padding-bottom: 10px;
+    margin: 0 1.2em;
 }
 .pet{
     display:flex;
@@ -205,10 +225,57 @@ margin: 0 1.2em;
     padding: 10px;
     min-height:60px;
     overflow: hidden;
+    margin: 1em 1em;
+    background-color: #AC3B61;
+    border: 2px solid #AC3B61;
+    border-radius: 10px;
 }
 
 .petListInfo{
     float: left;
     text-align: left;
-    padding-right: 20px;
+    padding-right: 50px;
+}
+.pet:first-child{
+    margin-top: 2em;
+}
+
+.accountDetails{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.premiumSignup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.heading{
+    font-family: 'Roboto Slab', serif;
+    margin-top: 1em;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 2.5em;
+}
+.alreadyPremium{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.detail{
+    font-size: 1.2em;
+}
+#loginErrorMessage{
+    display:none;
+    top: 250px;
+    width: 250px;
+    height: 650px;
+    position: absolute;
+    z-index: 200;
+    right: 0px;
+    overflow: hidden;
 }

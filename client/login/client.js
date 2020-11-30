@@ -3,7 +3,7 @@ const handleLogin = (e) => {
     $("#petMessage").animate({ width: 'hide' }, 350);
 
     if ($("#user").val == '' || $("#pass").val() == '') {
-        handleError("RAWR! Username or password is empty");
+        handleError("Username or password is empty");
         return false;
     }
 
@@ -19,12 +19,12 @@ const handleSignup = (e) => {
 
     $('#petMessage').animate({ width: 'hide' }, 350);
 
-    if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
-        handleError("RAWR! All fields are required");
+    if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == ''|| $("#birthday").val() == ''|| $("#age").val() == '') {
+        handleError("All fields are required");
         return false;
     }
     if ($("#pass").val() !== $("#pass2").val()) {
-        handleError("RAWR! Passwords do not match");
+        handleError("Passwords do not match");
         return false;
     }
 
@@ -38,11 +38,11 @@ const handleReset = (e) => {
     $('#petMessage').animate({ width: 'hide' }, 350);
 
     if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
-        handleError("RAWR! All fields are required");
+        handleError("All fields are required");
         return false;
     }
     if ($("#pass").val() !== $("#pass2").val()) {
-        handleError("RAWR! Passwords do not match");
+        handleError("Passwords do not match");
         return false;
     }
 
@@ -63,7 +63,7 @@ const LoginWindow = (props) => {
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password" />
             <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign in" />
+            <input className="inputSubmit" type="submit" value="Sign in" />
         </form>
     );
 };
@@ -87,7 +87,7 @@ const SignupWindow = (props) => {
             <label htmlFor="age">Age: </label>
             <input id="age" type="number" name="age" placeholder="0" min="0" max="150" />
             <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Sign up" />
+            <input className="inputSubmit" type="submit" value="Sign up" />
         </form>
     );
 };
@@ -107,7 +107,7 @@ const PasswordReset = (props) => {
             <label htmlFor="pass">New Password: </label>
             <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="formSubmit" type="submit" value="Reset" />
+            <input className="inputSubmit" type="submit" value="Reset" />
         </form>
     );
 };
@@ -137,7 +137,7 @@ const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
     const resetButton = document.querySelector("#resetPasswordButton");
-  
+
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();
         createSignupWindow(csrf);
@@ -153,7 +153,7 @@ const setup = (csrf) => {
         createPasswordResetWindow(csrf);
         return false;
     });
-    
+
     createLoginWindow(csrf);
 };
 
