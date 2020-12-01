@@ -266,7 +266,7 @@ var AlreadyPremium = function AlreadyPremium() {
     className: "alreadyPremium"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "heading"
-  }, "You are already a Premium Member"), /*#__PURE__*/React.createElement("h2", null, "Enjoy your ad-free experience!"));
+  }, "You are already a Premium Member"), /*#__PURE__*/React.createElement("b", null, "Enjoy your ad-free experience!"));
 };
 
 var createPetGenerator = function createPetGenerator(csrf) {

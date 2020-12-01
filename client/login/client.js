@@ -19,7 +19,7 @@ const handleSignup = (e) => {
 
     $('#petMessage').animate({ width: 'hide' }, 350);
 
-    if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == ''|| $("#birthday").val() == ''|| $("#age").val() == '') {
+    if ($("#user").val == '' || $("#pass").val() == '' || $("#pass2").val() == '' || $("#birthday").val() == '' || $("#age").val() == '') {
         handleError("All fields are required");
         return false;
     }
@@ -52,19 +52,19 @@ const handleReset = (e) => {
 }
 const LoginWindow = (props) => {
     return (
-        <form id="loginForm" name="loginForm"
-            onSubmit={handleLogin}
-            action="/login"
-            method="POST"
-            className="mainForm"
-        >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username" />
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password" />
-            <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="inputSubmit" type="submit" value="Sign in" />
-        </form>
+            <form id="loginForm" name="loginForm"
+                onSubmit={handleLogin}
+                action="/login"
+                method="POST"
+                className="mainForm"
+            >
+                <label htmlFor="username">Username: </label>
+                <input id="user" type="text" name="username" placeholder="username" />
+                <label htmlFor="pass">Password: </label>
+                <input id="pass" type="password" name="pass" placeholder="password" />
+                <input type="hidden" name="_csrf" value={props.csrf} />
+                <input className="inputSubmit" type="submit" value="Sign in" />
+            </form>
     );
 };
 

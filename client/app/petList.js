@@ -208,7 +208,7 @@ const AlreadyPremium = function () {
     return (
         <div className="alreadyPremium">
             <h1 className="heading">You are already a Premium Member</h1>
-            <h2>Enjoy your ad-free experience!</h2>
+            <b>Enjoy your ad-free experience!</b>
         </div>
     );
 }
